@@ -1,0 +1,1278 @@
+<!doctype html>
+<!--
+  RadioCode — statischer Export (erzeugt von build_static.py aus app.py).
+  Laeuft ohne Server: kein Netzaufruf, kein Socket, keine externen Assets,
+  keine Webfonts. Alles wird lokal im Browser gerechnet.
+  Demo — keine echte Zahlung.
+-->
+<html lang="de"><head>
+<meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#06080a">
+<link rel="icon" href="data:,">
+<title>RadioCode — Demo</title>
+<style>
+/* ===========================================================================
+   RadioCode — Design-Tokens  (KFZ / DIN-Autoradio im Armaturenbrett)
+   Materialien: Carbon-Armaturenbrett, gebuerstete Chrom-Frontplatte,
+   eingelassene Amber-LCD-Wanne, gerastete Drehknoepfe, LED-Ketten,
+   Gravur-Typografie. Nur CSS + Inline-SVG, keine externen Assets.
+   =========================================================================== */
+:root{
+  /* Flaechen */
+  --ink:#06080a;      /* Armaturenbrett */
+  --dash:#0c1013;     /* Modulgrund */
+  --panel:#12181c;    /* Modul-Front */
+  --well:#04070a;     /* Display-Wanne */
+  /* Metall */
+  --chrome-hi:#8d979e; --chrome:#394147; --chrome-lo:#171c20; --chrome-edge:#525b62;
+  /* Amber-Display */
+  --amber:#ffb02e; --amber-hi:#ffd489; --amber-mid:#e08c12; --amber-lo:#7c5514; --amber-dim:#402d0f;
+  --glow:rgba(255,176,46,.42);
+  /* Text */
+  --text:#e9eef1; --muted:#a7b1b8; --engrave:#8b959c;
+  /* Signal */
+  --led-off:#1a2126; --led-grn:#5fe08f; --led-red:#ff5a46;
+  --ok:#7ce7a6; --err:#ff9c8c;
+  /* Linien / Radien / Elevation */
+  --line:#232b31;
+  --r1:3px; --r2:7px; --r3:12px; --r4:18px;
+  --sh-lift:0 3px 0 #05070900,0 4px 12px rgba(0,0,0,.6);
+  --sh-well:inset 0 3px 14px rgba(0,0,0,.92),inset 0 0 0 1px rgba(0,0,0,.9);
+  /* Typo */
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"DejaVu Sans Mono",monospace;
+  /* Zustand (JS) */
+  --needle:8%; --knob:-125deg; --vu:-78deg; --p:0;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{
+  margin:0;color:var(--text);font:16px/1.55 var(--sans);
+  background-color:var(--ink);
+  background-image:
+    repeating-linear-gradient(48deg,rgba(255,255,255,.020) 0 1px,transparent 1px 5px),
+    repeating-linear-gradient(-48deg,rgba(255,255,255,.013) 0 1px,transparent 1px 5px),
+    radial-gradient(130% 55% at 50% -12%,#12181d 0%,var(--ink) 62%);
+  background-size:9px 9px,9px 9px,auto;
+}
+p{text-wrap:pretty}
+h1,h2,h3{text-wrap:balance}
+.sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.hide{display:none !important}
+:focus-visible{outline:2px solid var(--amber);outline-offset:2px;border-radius:var(--r1)}
+
+/* Gravur-Beschriftung: line-height nie unter 1.25, sonst werden Umlaut-Punkte
+   bei Versalien (PRUEFEN) abgeschnitten. */
+.eng{font-family:var(--mono);font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+     line-height:1.3;color:var(--engrave)}
+
+/* === Rahmen ============================================================== */
+.wrap{display:flex;flex-direction:column;max-width:640px;margin:0 auto;padding:0 12px 40px}
+section{scroll-margin-top:72px}
+.wrap > header{order:-2}
+#resultCard{order:-1}
+
+/* === Frontplatte (Fascia) ================================================ */
+.fascia{
+  position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:11px;
+  margin:0 -12px 14px;padding:9px 13px;
+  border-bottom:1px solid #040607;
+  background:
+    repeating-linear-gradient(90deg,rgba(255,255,255,.055) 0 1px,rgba(0,0,0,.05) 1px 2px,rgba(255,255,255,.02) 2px 3px,rgba(0,0,0,.035) 3px 4px),
+    linear-gradient(180deg,#5d666d 0%,#394147 42%,#232a2f 54%,#414950 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.28),inset 0 -1px 0 rgba(0,0,0,.6),0 7px 20px rgba(0,0,0,.65);
+}
+.fascia__dial{
+  width:38px;height:38px;flex:0 0 auto;border-radius:50%;display:grid;place-items:center;
+  background:
+    conic-gradient(from 0deg,#5b646b 0 2deg,#2a3136 2deg 6deg,#4d565d 6deg 8deg,#252c31 8deg 12deg) padding-box,
+    radial-gradient(62% 62% at 34% 28%,#474f55,#0e1316 78%);
+  box-shadow:0 0 0 1px rgba(0,0,0,.75),inset 0 1px 0 rgba(255,255,255,.24),inset 0 -3px 7px rgba(0,0,0,.75);
+}
+.fascia__dial span{
+  width:26px;height:26px;border-radius:50%;display:grid;place-items:center;
+  background:radial-gradient(60% 60% at 36% 30%,#333b41,#0c1013 76%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 0 0 1px rgba(0,0,0,.6);
+}
+.fascia__txt{flex:1 1 auto;min-width:0}
+.fascia__txt h1{
+  margin:0;font:800 17px/1.25 var(--sans);letter-spacing:.2em;text-transform:uppercase;
+  color:#f2f6f8;text-shadow:0 1px 0 rgba(0,0,0,.85),0 -1px 0 rgba(255,255,255,.22);
+}
+.fascia__sub{display:block;margin-top:3px;font:700 8.5px/1.3 var(--mono);letter-spacing:.28em;
+  text-transform:uppercase;color:#cfd8de;text-shadow:0 1px 0 rgba(0,0,0,.7)}
+.chip{
+  flex:0 0 auto;display:inline-flex;align-items:center;gap:6px;padding:6px 9px;border-radius:var(--r1);
+  font:700 9.5px/1.3 var(--mono);letter-spacing:.18em;text-transform:uppercase;color:#ffd489;
+  background:linear-gradient(180deg,#1c2226,#0b0f12);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 0 0 1px rgba(0,0,0,.7),0 0 12px rgba(255,176,46,.12);
+}
+
+/* === LED ================================================================= */
+.led{
+  width:7px;height:7px;flex:0 0 auto;border-radius:50%;display:inline-block;
+  background:var(--led-off);box-shadow:inset 0 0 2px rgba(0,0,0,.9),0 0 0 1px rgba(0,0,0,.55);
+}
+.led.is-on{background:var(--led-grn);box-shadow:0 0 7px rgba(95,224,143,.75),inset 0 0 2px rgba(255,255,255,.5)}
+.led.is-amber{background:var(--amber);box-shadow:0 0 7px var(--glow),inset 0 0 2px rgba(255,255,255,.5)}
+.led.is-red{background:var(--led-red);box-shadow:0 0 7px rgba(255,90,70,.7),inset 0 0 2px rgba(255,255,255,.45)}
+
+/* === Instrumenten-Cluster ================================================ */
+.cluster{
+  margin:0 0 16px;padding:12px 11px;border-radius:var(--r4);
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,0) 30%),
+    linear-gradient(180deg,#1b2227 0%,#0e1317 38%,#0a0e11 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.2),inset 0 0 0 1px rgba(0,0,0,.7),
+    0 1px 0 rgba(255,255,255,.05),0 12px 28px rgba(0,0,0,.65);
+}
+.cluster__row{display:grid;grid-template-columns:52px 1fr 52px;gap:9px;align-items:center}
+.knob{
+  position:relative;width:52px;height:52px;border-radius:50%;
+  background:
+    conic-gradient(from 0deg,#5f686f 0 3deg,#262d33 3deg 7deg,#525b62 7deg 10deg,#1f262b 10deg 15deg),
+    radial-gradient(60% 60% at 34% 28%,#4a525a,#0d1114 80%);
+  box-shadow:0 0 0 1px rgba(0,0,0,.8),inset 0 2px 0 rgba(255,255,255,.16),
+             inset 0 -4px 9px rgba(0,0,0,.8),0 5px 12px rgba(0,0,0,.6);
+}
+.knob::after{
+  content:"";position:absolute;inset:8px;border-radius:50%;
+  background:radial-gradient(62% 62% at 36% 30%,#3b434a,#0b0f12 78%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 0 0 1px rgba(0,0,0,.55);
+}
+.knob__dot{
+  position:absolute;left:50%;top:50%;width:2.5px;height:17px;margin:-17px 0 0 -1.25px;
+  transform-origin:50% 100%;transform:rotate(var(--knob));z-index:2;border-radius:2px;
+  background:linear-gradient(180deg,var(--amber),var(--amber-lo));
+  box-shadow:0 0 6px var(--glow);
+  transition:transform .85s cubic-bezier(.2,.9,.25,1);
+}
+.knob--vol .knob__dot{transform:rotate(-38deg)}
+.knob__cap{position:absolute;left:50%;bottom:-14px;transform:translateX(-50%);
+  font:700 7.5px/1.3 var(--mono);letter-spacing:.16em;color:var(--engrave)}
+
+/* --- LCD-Wanne --- */
+.lcd{
+  position:relative;overflow:hidden;padding:9px 10px 8px;border-radius:var(--r2);
+  background:
+    repeating-linear-gradient(0deg,rgba(0,0,0,.38) 0 1px,transparent 1px 3px),
+    linear-gradient(180deg,#0a0d07 0%,#05080a 100%);
+  box-shadow:var(--sh-well),0 0 0 1px rgba(255,255,255,.05),0 0 22px rgba(255,176,46,.06) inset;
+}
+.lcd__top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:5px 8px;margin-bottom:6px}
+.lcd__band{flex:1 0 100%;font:700 10px/1.3 var(--mono);letter-spacing:.16em;color:var(--amber);
+  text-shadow:0 0 8px var(--glow);overflow-wrap:anywhere}
+.lcd__leds{display:flex;gap:9px;flex:0 0 auto}
+.lcd__leds span{display:inline-flex;align-items:center;gap:4px;font:700 7.5px/1.35 var(--mono);
+  letter-spacing:.1em;color:var(--engrave)}
+.lcd__main{
+  margin:0 0 9px;min-height:2.7em;
+  font:700 12.5px/1.35 var(--mono);letter-spacing:.05em;color:var(--amber-hi);
+  text-shadow:0 0 9px var(--glow);
+}
+/* --- Sendeskala --- */
+.scale{position:relative;height:26px;border-radius:var(--r1);
+  background:linear-gradient(180deg,#0b0e08,#060909);box-shadow:inset 0 1px 4px rgba(0,0,0,.85)}
+.scale__ticks{
+  position:absolute;inset:0;border-radius:var(--r1);
+  background-image:
+    repeating-linear-gradient(90deg,var(--amber-lo) 0 1px,transparent 1px 10%),
+    repeating-linear-gradient(90deg,var(--amber-dim) 0 1px,transparent 1px 2.5%);
+  background-position:0 0,0 0;background-size:100% 62%,100% 34%;background-repeat:no-repeat;
+  background-origin:content-box;padding:4px 2px;
+}
+.scale__needle{
+  position:absolute;top:-2px;bottom:-2px;left:var(--needle);width:2px;margin-left:-1px;
+  background:linear-gradient(180deg,#ff8a6a,#e8341a);border-radius:2px;
+  box-shadow:0 0 9px rgba(255,90,70,.85),0 0 2px rgba(255,255,255,.6);
+  transition:left .85s cubic-bezier(.2,.9,.25,1);
+}
+.scale__needle::after{content:"";position:absolute;left:-3px;top:-3px;width:8px;height:8px;
+  border-radius:50%;background:#ff5a46;box-shadow:0 0 9px rgba(255,90,70,.9)}
+.scale__labels{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin-top:6px}
+.scale__labels span{font:700 8px/1.35 var(--mono);letter-spacing:.09em;text-transform:uppercase;
+  color:var(--engrave);text-align:center}
+.scale__labels span.is-active{color:var(--amber);text-shadow:0 0 8px var(--glow)}
+
+/* === Modul ============================================================== */
+.mod{
+  position:relative;margin:0 0 14px;padding:16px 14px 15px;border-radius:var(--r3);
+  background-image:
+    radial-gradient(circle,#79838a 0 1px,#2c343a 1px 2.6px,rgba(0,0,0,.75) 2.6px 3.6px,transparent 3.7px),
+    radial-gradient(circle,#79838a 0 1px,#2c343a 1px 2.6px,rgba(0,0,0,.75) 2.6px 3.6px,transparent 3.7px),
+    radial-gradient(circle,#79838a 0 1px,#2c343a 1px 2.6px,rgba(0,0,0,.75) 2.6px 3.6px,transparent 3.7px),
+    radial-gradient(circle,#79838a 0 1px,#2c343a 1px 2.6px,rgba(0,0,0,.75) 2.6px 3.6px,transparent 3.7px),
+    linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,0) 26%),
+    linear-gradient(180deg,#151b20 0%,#0d1216 58%,#0a0e11 100%);
+  background-position:9px 9px,calc(100% - 9px) 9px,9px calc(100% - 9px),calc(100% - 9px) calc(100% - 9px),0 0,0 0;
+  background-size:9px 9px,9px 9px,9px 9px,9px 9px,auto,auto;
+  background-repeat:no-repeat;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.14),inset 0 0 0 1px rgba(0,0,0,.65),0 8px 20px rgba(0,0,0,.55);
+}
+.mod__head{display:flex;align-items:center;gap:9px;margin:0 0 13px;padding:0 4px 10px;
+  border-bottom:1px solid rgba(255,255,255,.06)}
+.mod__no{
+  flex:0 0 auto;min-width:26px;height:22px;padding:0 6px;border-radius:var(--r1);display:grid;place-items:center;
+  font:800 10px/1.3 var(--mono);letter-spacing:.06em;color:#0d1013;
+  background:linear-gradient(180deg,#9aa4ab,#5c656c);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 1px 3px rgba(0,0,0,.6);
+}
+.mod__title{margin:0;font:700 12px/1.35 var(--sans);letter-spacing:.17em;text-transform:uppercase;color:#c3cdd3}
+
+/* === Felder ============================================================= */
+.field{margin:0 0 13px}
+.field > label{display:block;margin:0 0 6px;font:700 10.5px/1.35 var(--mono);letter-spacing:.12em;
+  text-transform:uppercase;color:var(--engrave)}
+input[type=text],input[type=email],input:not([type]){
+  width:100%;min-height:46px;padding:11px 12px;border:0;border-radius:var(--r2);
+  font:700 15px/1.4 var(--mono);letter-spacing:.07em;color:var(--amber-hi);
+  background:linear-gradient(180deg,#070a0c,#04070a);
+  box-shadow:var(--sh-well),0 1px 0 rgba(255,255,255,.06);
+  caret-color:var(--amber);
+}
+input::placeholder{color:#78868e;letter-spacing:.05em}
+input:hover{box-shadow:var(--sh-well),0 1px 0 rgba(255,255,255,.1),0 0 0 1px rgba(255,176,46,.14)}
+input:focus{outline:none;box-shadow:var(--sh-well),0 0 0 2px var(--amber),0 0 16px rgba(255,176,46,.22)}
+.inline{display:flex;gap:8px;align-items:stretch}
+.inline input{flex:1 1 auto;min-width:0}
+.inline .btn{flex:0 0 auto}
+
+/* === Tasten (physisch) ================================================== */
+.btn{
+  position:relative;display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  min-height:46px;padding:11px 16px;border:0;border-radius:var(--r2);cursor:pointer;
+  font:800 12.5px/1.35 var(--sans);letter-spacing:.13em;text-transform:uppercase;color:#dfe6ea;
+  background:
+    repeating-linear-gradient(90deg,rgba(255,255,255,.035) 0 1px,transparent 1px 3px),
+    linear-gradient(180deg,#4c555c 0%,#333b41 46%,#242b31 54%,#333b41 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.3),inset 0 -2px 0 rgba(0,0,0,.55),
+             0 3px 0 #0a0e11,0 5px 12px rgba(0,0,0,.6);
+  transition:transform .09s ease,box-shadow .09s ease,filter .15s ease;
+  -webkit-tap-highlight-color:transparent;
+}
+.btn:hover{filter:brightness(1.14)}
+.btn:active{transform:translateY(3px);
+  box-shadow:inset 0 2px 8px rgba(0,0,0,.75),0 0 0 #0a0e11,0 1px 3px rgba(0,0,0,.5)}
+.btn[disabled]{cursor:not-allowed;filter:grayscale(.55) brightness(.62);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 2px 0 #0a0e11}
+.btn.is-busy{filter:brightness(.94);cursor:progress}
+.btn--key{
+  color:#231603;text-shadow:0 1px 0 rgba(255,255,255,.32);
+  background:
+    repeating-linear-gradient(90deg,rgba(255,255,255,.05) 0 1px,transparent 1px 3px),
+    linear-gradient(180deg,#ffd489 0%,#ffb02e 44%,#e08c12 56%,#ffbb47 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.6),inset 0 -2px 0 rgba(120,70,0,.45),
+             0 3px 0 #5c3f09,0 6px 16px rgba(255,176,46,.22);
+}
+.btn--key:active{box-shadow:inset 0 2px 9px rgba(90,55,0,.6),0 0 0 #5c3f09}
+.btn--wide{width:100%;flex-direction:column;gap:3px;padding:12px 14px;min-height:58px}
+.btn--wide .btn__legend{font:700 9px/1.35 var(--mono);letter-spacing:.22em;opacity:.72}
+.btn--wide .btn__main{font:800 14px/1.35 var(--sans);letter-spacing:.09em}
+.btn.is-busy{pointer-events:none}
+.btn.is-busy .btn__main::after{content:"";display:inline-block;width:1.1em;text-align:left;animation:dots 1.1s steps(4,end) infinite}
+@keyframes dots{0%{content:""}25%{content:"."}50%{content:".."}75%{content:"..."}}
+
+/* === Stationstasten (Marken) ============================================ */
+.brands{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 13px}
+.brand{
+  display:flex;flex-direction:column;gap:3px;min-height:76px;padding:9px 10px;border:0;cursor:pointer;
+  border-radius:var(--r2);text-align:left;color:var(--text);
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,0) 34%),
+    linear-gradient(180deg,#2e363c 0%,#1b2126 50%,#141a1e 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 2px 0 #080b0d,0 4px 10px rgba(0,0,0,.5);
+  transition:transform .09s ease,box-shadow .09s ease,filter .15s ease;
+}
+.brand:hover{filter:brightness(1.16)}
+.brand:active{transform:translateY(2px);box-shadow:inset 0 2px 7px rgba(0,0,0,.7),0 0 0 #080b0d}
+.brand__top{display:flex;align-items:center;gap:6px;margin-bottom:1px}
+.brand__no{font:700 8.5px/1.35 var(--mono);letter-spacing:.14em;color:var(--engrave)}
+.brand b{font:700 14px/1.3 var(--sans);letter-spacing:.03em}
+.brand .models{font:400 10.5px/1.4 var(--sans);color:var(--muted);overflow-wrap:anywhere}
+.brand .tag{margin-top:auto;padding-top:4px;font:700 8.5px/1.35 var(--mono);letter-spacing:.12em;
+  text-transform:uppercase;color:var(--engrave)}
+.brand.is-selected{
+  background:
+    linear-gradient(180deg,rgba(255,176,46,.16),rgba(255,176,46,0) 46%),
+    linear-gradient(180deg,#3a3526 0%,#221d12 52%,#171410 100%);
+  box-shadow:inset 0 1px 0 rgba(255,214,140,.38),0 0 0 1px var(--amber-mid),
+             0 2px 0 #0a0b0d,0 0 18px rgba(255,176,46,.18);
+}
+.brand.is-selected b{color:var(--amber-hi)}
+.brand.is-selected .tag{color:var(--amber)}
+.brand[data-supported="0"]{filter:grayscale(.85) brightness(.88)}
+
+/* === Meldungen ========================================================== */
+.msg{margin:2px 0 0;min-height:1.2em;font:600 12.5px/1.5 var(--sans);color:var(--muted)}
+.msg:empty{min-height:0}
+.msg.ok{color:var(--ok)}
+.msg.err{color:var(--err)}
+.msg.busy{color:var(--amber)}
+.hint{margin:0 0 13px;font:400 12.5px/1.6 var(--sans);color:var(--muted)}
+.key{display:inline-block;min-width:20px;padding:1px 5px;border-radius:var(--r1);text-align:center;
+  font:700 11px/1.5 var(--mono);color:#e9eef1;
+  background:linear-gradient(180deg,#3d454b,#20272c);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 1px 2px rgba(0,0,0,.6)}
+.warn{
+  margin:0 0 13px;padding:10px 11px;border-radius:var(--r2);
+  font:600 11.5px/1.55 var(--sans);color:#ffd489;
+  background:linear-gradient(180deg,rgba(255,176,46,.08),rgba(255,176,46,.03));
+  box-shadow:inset 0 0 0 1px rgba(255,176,46,.28)}
+.warn b{color:var(--amber)}
+
+/* === Preis-Anzeige (Kassen-Display) ===================================== */
+.ticket{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
+  margin:0 0 12px;padding:11px 12px;border-radius:var(--r2);
+  background:
+    repeating-linear-gradient(0deg,rgba(0,0,0,.34) 0 1px,transparent 1px 3px),
+    linear-gradient(180deg,#0a0d07,#05080a);
+  box-shadow:var(--sh-well),0 0 0 1px rgba(255,255,255,.05);
+}
+.ticket__label{font:700 9.5px/1.35 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--engrave)}
+.price__val{font:800 26px/1.2 var(--mono);letter-spacing:.04em;color:var(--amber);
+  text-shadow:0 0 12px var(--glow);font-variant-numeric:tabular-nums}
+
+/* === Zahlungsarten (Kippschalter-Reihe) ================================= */
+.pays{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:0 0 13px}
+.pays .pay:first-child{grid-column:1 / -1}
+.pay{
+  display:flex;align-items:center;gap:9px;min-height:52px;padding:9px 11px;border:0;cursor:pointer;
+  border-radius:var(--r2);text-align:left;color:var(--text);
+  background:
+    repeating-linear-gradient(90deg,rgba(255,255,255,.03) 0 1px,transparent 1px 3px),
+    linear-gradient(180deg,#394147 0%,#222930 48%,#161c21 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 2px 0 #080b0d,0 4px 10px rgba(0,0,0,.5);
+  transition:transform .09s ease,box-shadow .09s ease,filter .15s ease;
+}
+.pay:hover{filter:brightness(1.16)}
+.pay:active{transform:translateY(2px);box-shadow:inset 0 2px 7px rgba(0,0,0,.7),0 0 0 #080b0d}
+.pay svg{flex:0 0 auto;display:block}
+.pay__txt{display:flex;flex-direction:column;gap:2px;min-width:0}
+.pay__name{font:700 12.5px/1.3 var(--sans);letter-spacing:.02em;white-space:nowrap}
+.pay__sub{font:700 8px/1.35 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--engrave)}
+.pay[aria-checked="true"]{
+  background:
+    repeating-linear-gradient(90deg,rgba(255,255,255,.04) 0 1px,transparent 1px 3px),
+    linear-gradient(180deg,#3a3526 0%,#241f13 52%,#181410 100%);
+  box-shadow:inset 0 1px 0 rgba(255,214,140,.4),0 0 0 1px var(--amber-mid),0 2px 0 #0a0b0d,0 0 18px rgba(255,176,46,.2);
+}
+.pay[aria-checked="true"] .pay__name{color:var(--amber-hi)}
+.pay[aria-checked="true"] .pay__sub{color:var(--amber)}
+.pay__led{margin-left:auto}
+
+/* === Verarbeitung ======================================================= */
+.proc{
+  margin:12px 0 0;padding:12px 12px 13px;border-radius:var(--r2);
+  background:
+    repeating-linear-gradient(0deg,rgba(0,0,0,.34) 0 1px,transparent 1px 3px),
+    linear-gradient(180deg,#0a0d07,#05080a);
+  box-shadow:var(--sh-well),0 0 0 1px rgba(255,255,255,.05);
+}
+.proc__chain{display:flex;gap:5px;justify-content:space-between;margin:0 0 11px}
+.proc__chain i{
+  flex:1 1 0;height:7px;border-radius:2px;background:var(--amber-dim);
+  box-shadow:inset 0 0 2px rgba(0,0,0,.8);
+}
+.proc.is-run .proc__chain i{animation:chase 1.05s linear infinite}
+.proc.is-done .proc__chain i{background:var(--led-grn);box-shadow:0 0 7px rgba(95,224,143,.55);animation:none}
+.proc.is-fail .proc__chain i{background:var(--led-red);box-shadow:0 0 7px rgba(255,90,70,.5);animation:none}
+@keyframes chase{
+  0%,100%{background:var(--amber-dim);box-shadow:inset 0 0 2px rgba(0,0,0,.8)}
+  18%{background:var(--amber);box-shadow:0 0 9px var(--glow)}
+}
+.proc__gauge{display:flex;align-items:center;gap:11px;margin:0 0 10px}
+.proc__gauge svg{flex:0 0 auto}
+.gauge__needle{transform-origin:60px 58px;transform:rotate(var(--vu));
+  transition:transform .55s cubic-bezier(.2,.9,.25,1)}
+.proc__bar{
+  flex:1 1 auto;height:16px;border-radius:var(--r1);overflow:hidden;
+  background:repeating-linear-gradient(90deg,#161d22 0 7px,#080c0f 7px 9px);
+  box-shadow:inset 0 1px 5px rgba(0,0,0,.9),inset 0 0 0 1px rgba(0,0,0,.8);
+}
+.proc__bar b{
+  display:block;height:100%;width:calc(var(--p) * 1%);
+  background:repeating-linear-gradient(90deg,var(--amber) 0 7px,transparent 7px 9px);
+  box-shadow:0 0 12px var(--glow);
+  transition:width .45s cubic-bezier(.3,.8,.3,1);
+}
+.proc.is-done .proc__bar b{background:repeating-linear-gradient(90deg,var(--led-grn) 0 7px,transparent 7px 9px);
+  box-shadow:0 0 12px rgba(95,224,143,.45)}
+.proc__status{
+  display:flex;align-items:center;gap:8px;margin:0;
+  font:700 11.5px/1.45 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--amber);
+  text-shadow:0 0 9px var(--glow);
+}
+.proc.is-done .proc__status{color:var(--ok);text-shadow:0 0 9px rgba(95,224,143,.4)}
+.proc.is-fail .proc__status{color:var(--err);text-shadow:none}
+.proc__check{flex:0 0 auto;width:20px;height:20px;opacity:0;transform:scale(.6);
+  transition:opacity .3s ease,transform .35s cubic-bezier(.2,1.4,.4,1)}
+.proc.is-done .proc__check{opacity:1;transform:scale(1)}
+.proc__check path{stroke-dasharray:22;stroke-dashoffset:22;transition:stroke-dashoffset .4s ease .1s}
+.proc.is-done .proc__check path{stroke-dashoffset:0}
+.proc__note{margin:9px 0 0;font:700 8.5px/1.4 var(--mono);letter-spacing:.13em;text-transform:uppercase;color:var(--engrave)}
+
+/* === Ergebnis: Freischaltcode ganz oben ================================= */
+#resultCard{
+  margin:0 0 16px;padding:0;border-radius:var(--r4);overflow:hidden;
+  background:linear-gradient(180deg,#1d242a 0%,#0d1216 44%,#0a0e11 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.2),inset 0 0 0 1px rgba(0,0,0,.7),
+             0 14px 34px rgba(0,0,0,.7),0 0 34px rgba(255,176,46,.1);
+}
+.unlock__bar{
+  display:flex;align-items:center;gap:9px;padding:9px 12px;
+  background:
+    repeating-linear-gradient(90deg,rgba(255,255,255,.05) 0 1px,rgba(0,0,0,.05) 1px 2px,rgba(255,255,255,.02) 2px 3px,rgba(0,0,0,.035) 3px 4px),
+    linear-gradient(180deg,#5d666d 0%,#394147 42%,#232a2f 54%,#414950 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.28),0 3px 10px rgba(0,0,0,.6);
+}
+.unlock__bar h2{flex:1 1 auto;margin:0;font:800 12.5px/1.35 var(--sans);letter-spacing:.18em;
+  text-transform:uppercase;color:#f2f6f8;text-shadow:0 1px 0 rgba(0,0,0,.8)}
+.unlock__well{
+  margin:12px;padding:13px 10px 12px;border-radius:var(--r3);text-align:center;
+  background:
+    repeating-linear-gradient(0deg,rgba(0,0,0,.4) 0 1px,transparent 1px 3px),
+    radial-gradient(90% 120% at 50% 20%,#10120a,#04070a 70%);
+  box-shadow:var(--sh-well),0 0 0 1px rgba(255,255,255,.06);
+}
+.unlock__cap{display:block;font:700 9px/1.4 var(--mono);letter-spacing:.24em;text-transform:uppercase;
+  color:var(--amber-mid)}
+.code{margin:9px 0 8px;display:flex;justify-content:center;gap:8px}
+.code svg{width:100%;max-width:296px;height:auto;display:block;filter:drop-shadow(0 0 11px var(--glow))}
+.seg-on{fill:var(--amber)}
+.seg-off{fill:#1c1608}
+.unlock__hint{display:block;font:700 10px/1.45 var(--mono);letter-spacing:.1em;text-transform:uppercase;
+  color:var(--amber-mid)}
+.unlock__act{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 12px 12px}
+.receipt{margin:0 12px 12px;padding:0;border-radius:var(--r2);overflow:hidden;
+  background:linear-gradient(180deg,#0f1418,#0a0e11);box-shadow:inset 0 0 0 1px rgba(255,255,255,.06)}
+.receipt div{display:flex;align-items:baseline;justify-content:space-between;gap:10px;
+  padding:9px 11px;border-bottom:1px solid rgba(255,255,255,.05)}
+.receipt div:last-child{border-bottom:0}
+.receipt dt{flex:0 0 auto;font:700 9px/1.5 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--engrave)}
+.receipt dd{margin:0;text-align:right;font:700 12px/1.5 var(--mono);letter-spacing:.04em;color:var(--text);
+  overflow-wrap:anywhere}
+.fineprint{margin:0 12px 13px;font:600 10.5px/1.55 var(--sans);color:var(--muted)}
+.fineprint b{color:var(--amber-mid)}
+
+/* === Ablauf / Instrumente ============================================== */
+.steps{margin:0 0 15px;padding:0;list-style:none;display:grid;gap:9px}
+.steps li{display:grid;grid-template-columns:30px 1fr;gap:10px;align-items:start}
+.steps b{display:grid;place-items:center;height:24px;border-radius:var(--r1);
+  font:800 10px/1.3 var(--mono);color:#0d1013;
+  background:linear-gradient(180deg,#9aa4ab,#5c656c);box-shadow:inset 0 1px 0 rgba(255,255,255,.5)}
+.steps span{font:400 12.5px/1.55 var(--sans);color:var(--muted)}
+.meters{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:0 0 12px}
+.meter{
+  padding:10px 11px;border-radius:var(--r2);
+  background:linear-gradient(180deg,#0a0d07,#05080a);
+  box-shadow:var(--sh-well),0 0 0 1px rgba(255,255,255,.05);
+}
+.meter--wide{grid-column:1 / -1;display:flex;align-items:center;gap:12px}
+.meter em{display:block;font-style:normal;font:700 8.5px/1.4 var(--mono);letter-spacing:.15em;
+  text-transform:uppercase;color:var(--engrave)}
+.meter b{display:block;margin:3px 0 2px;font:800 21px/1.25 var(--mono);color:var(--amber);
+  text-shadow:0 0 10px var(--glow);font-variant-numeric:tabular-nums}
+.meter span{display:block;font:400 10.5px/1.45 var(--sans);color:var(--muted)}
+.note{margin:0;font:400 11px/1.55 var(--sans);color:var(--muted)}
+.note b{color:var(--text)}
+
+/* === Protokoll-Tabelle ================================================= */
+.scroller{overflow-x:auto;border-radius:var(--r2);
+  background:linear-gradient(180deg,#0a0d07,#05080a);box-shadow:var(--sh-well),0 0 0 1px rgba(255,255,255,.05)}
+.log{width:100%;border-collapse:collapse;font:600 11.5px/1.5 var(--mono);letter-spacing:.03em}
+.log th{padding:9px 10px;text-align:left;font:700 8.5px/1.4 var(--mono);letter-spacing:.14em;
+  text-transform:uppercase;color:var(--engrave);border-bottom:1px solid rgba(255,255,255,.08);white-space:nowrap}
+.log td{padding:8px 10px;border-bottom:1px solid rgba(255,255,255,.04);color:var(--muted);white-space:nowrap}
+.log tr:last-child td{border-bottom:0}
+.log td:last-child{color:var(--amber);font-weight:800}
+.log tr.empty td{color:var(--engrave);font-style:italic;white-space:normal}
+
+footer{margin:4px 4px 0;font:400 11px/1.6 var(--sans);color:var(--engrave)}
+footer b{color:var(--muted)}
+
+/* === Breite Viewports ================================================== */
+@media (min-width:560px){
+  .pays{grid-template-columns:repeat(3,1fr)}
+  .pays .pay:first-child{grid-column:auto}
+  .brands{grid-template-columns:repeat(3,1fr)}
+  .meters{grid-template-columns:repeat(2,1fr)}
+  .code svg{max-width:360px}
+  .lcd__band{flex:0 1 auto}
+}
+
+/* === Bewegung reduzieren =============================================== */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;
+    transition-duration:.001ms !important;scroll-behavior:auto !important}
+  .proc.is-run .proc__chain i{background:var(--amber);box-shadow:0 0 8px var(--glow)}
+}
+</style></head><body>
+<div class="wrap">
+
+<header class="fascia">
+  <span class="fascia__dial" aria-hidden="true"><span>
+    <svg width="16" height="16" viewBox="0 0 22 22" fill="none" stroke="#ffb02e" stroke-width="1.5" stroke-linecap="round">
+      <circle cx="11" cy="14" r="2.4" fill="#ffb02e" stroke="none"/>
+      <path d="M6.8 9.6a5.8 5.8 0 0 1 8.4 0" opacity=".85"/>
+      <path d="M4 6.6a9.8 9.8 0 0 1 14 0" opacity=".45"/>
+    </svg>
+  </span></span>
+  <span class="fascia__txt">
+    <h1>RadioCode</h1>
+    <span class="fascia__sub">Autoradio-Freischaltcode</span>
+  </span>
+  <span class="chip"><i class="led is-amber" aria-hidden="true"></i>Demo</span>
+</header>
+
+<!-- ===================== ERGEBNIS — steht nach der Zahlung ganz oben ==== -->
+<section id="resultCard" class="hide" aria-labelledby="unlockTitle">
+  <div class="unlock__bar">
+    <i class="led is-on" aria-hidden="true"></i>
+    <h2 id="unlockTitle">Freischaltcode</h2>
+    <span class="chip">Demo</span>
+  </div>
+
+  <div class="unlock__well">
+    <span class="unlock__cap" id="codeMeta">Code</span>
+    <p class="code" id="theCode" role="img" aria-label="Freischaltcode noch nicht ermittelt"></p>
+    <span class="unlock__hint">Am Radio mit den Zifferntasten eingeben</span>
+  </div>
+
+  <div class="unlock__act">
+    <button type="button" class="btn btn--key" id="btnCopy">Code kopieren</button>
+    <button type="button" class="btn" id="btnAgain">Neue Abfrage</button>
+  </div>
+
+  <dl class="receipt" id="receipt"></dl>
+
+  <p class="fineprint"><b>Demo — keine echte Zahlung.</b> Der Code ist echt und lokal berechnet.</p>
+</section>
+
+<!-- ===================== Instrumenten-Cluster ========================== -->
+<section class="cluster" aria-label="Gerätestatus">
+  <div class="cluster__row">
+    <span class="knob knob--vol" aria-hidden="true"><span class="knob__dot"></span><span class="knob__cap">VOL</span></span>
+    <div class="lcd">
+      <div class="lcd__top">
+        <span class="lcd__band" id="displayBand">BAND · RENAULT</span>
+        <span class="lcd__leds">
+          <span><i class="led is-on" id="ledBrand"></i>MARKE</span>
+          <span><i class="led" id="ledPre"></i>PRECODE</span>
+          <span><i class="led" id="ledCode"></i>CODE</span>
+        </span>
+      </div>
+      <p class="lcd__main" id="displayMain">Bereit — Fahrzeug wählen, Precode eingeben</p>
+      <div class="scale" role="presentation">
+        <span class="scale__ticks"></span>
+        <span class="scale__needle"></span>
+      </div>
+      <div class="scale__labels" id="scaleLabels">
+        <span class="is-active">Prüfen</span><span>Precode</span><span>Zahlung</span><span>Code</span>
+      </div>
+    </div>
+    <span class="knob" aria-hidden="true"><span class="knob__dot"></span><span class="knob__cap">TUNE</span></span>
+  </div>
+</section>
+
+<!-- ===================== 01 Fahrzeug & Precode ========================= -->
+<section class="mod">
+  <div class="mod__head"><span class="mod__no">01</span><h2 class="mod__title">Fahrzeug &amp; Precode</h2></div>
+
+  <div class="field">
+    <label for="serial">Seriennummer / Fahrgestellnummer</label>
+    <div class="inline">
+      <input id="serial" placeholder="VF17RRN0A60392301" autocapitalize="characters" spellcheck="false">
+      <button type="button" class="btn" id="btnLookup"><span class="btn__main">Prüfen</span></button>
+    </div>
+  </div>
+  <p class="msg" id="lookupOut" role="status" aria-live="polite"></p>
+
+  <div class="brands" id="brandGrid" role="group" aria-label="Marke wählen"></div>
+
+  <p class="hint">Radio einschalten. Tasten <span class="key">1</span> und <span class="key">6</span>
+    fünf Sekunden halten. Sonst: Aufkleber auf der Rückseite.</p>
+
+  <div class="field">
+    <label for="precode">Precode des Radios</label>
+    <input id="precode" placeholder="A123" autocapitalize="characters" maxlength="4" spellcheck="false" inputmode="text">
+  </div>
+  <button type="button" class="btn btn--key btn--wide" id="btnCheck">
+    <span class="btn__legend">Ohne Kosten</span><span class="btn__main">Precode prüfen</span>
+  </button>
+  <p class="msg" id="checkOut" role="status" aria-live="polite"></p>
+</section>
+
+<!-- ===================== 02 Demo-Zahlung ============================== -->
+<section class="mod hide" id="payCard">
+  <div class="mod__head"><span class="mod__no">02</span><h2 class="mod__title">Demo-Zahlung</h2></div>
+
+  <div class="ticket">
+    <span class="ticket__label">Preis</span>
+    <span class="price__val" id="price">5,00 € (Demo)</span>
+  </div>
+  <div class="ticket">
+    <span class="ticket__label">Code</span>
+    <span class="price__val" id="maskedCode">••••</span>
+  </div>
+
+  <p class="warn"><b>Demo — keine echte Zahlung.</b> Keine Karte wird belastet.
+    Die Zahlungsarten sind nur Ansicht.</p>
+
+  <p class="eng" style="margin:0 0 7px;font-size:10.5px">Zahlungsart wählen</p>
+  <div class="pays" id="payMethods" role="radiogroup" aria-label="Zahlungsart (Demo)"></div>
+
+  <div class="field hide" id="cardRow">
+    <label for="card">Kartennummer (Demo)</label>
+    <input id="card" value="4242 4242 4242 4242" inputmode="numeric" autocomplete="off" spellcheck="false">
+  </div>
+
+  <div class="field">
+    <label for="email">E-Mail (optional, simuliert)</label>
+    <input id="email" type="email" placeholder="name@beispiel.de" autocomplete="off" spellcheck="false">
+  </div>
+
+  <button type="button" class="btn btn--key btn--wide" id="btnBuy">
+    <span class="btn__legend">Demo</span><span class="btn__main">5,00 € zahlen</span>
+  </button>
+
+  <div class="proc hide" id="proc" aria-hidden="true">
+    <div class="proc__chain" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="proc__gauge">
+      <svg width="86" height="52" viewBox="0 0 120 66" aria-hidden="true">
+        <path d="M14 58 A46 46 0 0 1 106 58" fill="none" stroke="#3a2f16" stroke-width="1.4"/>
+        <path d="M20 58 A40 40 0 0 1 100 58" fill="none" stroke="#7c5514" stroke-width="6" stroke-dasharray="1.5 11.6"/>
+        <line class="gauge__needle" x1="60" y1="58" x2="60" y2="22" stroke="#ff6a4d" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="60" cy="58" r="4.5" fill="#2b3238" stroke="#565e64" stroke-width="1"/>
+      </svg>
+      <span class="proc__bar"><b></b></span>
+    </div>
+    <p class="proc__status" id="procStatus">
+      <svg class="proc__check" viewBox="0 0 24 24" fill="none" stroke="#7ce7a6" stroke-width="3"
+           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.5l5.2 5.3L20 6.5"/></svg>
+      <span id="procText">Bereit</span>
+    </p>
+    <p class="proc__note">Demo — keine echte Zahlung</p>
+  </div>
+
+  <p class="msg" id="buyOut" role="status" aria-live="polite"></p>
+</section>
+
+<!-- ===================== Ablauf + Instrumente ========================= -->
+<section class="mod">
+  <div class="mod__head"><span class="mod__no">i</span><h2 class="mod__title">Ablauf</h2></div>
+  <p class="hint">Radio-Code in drei Schritten.</p>
+  <ol class="steps">
+    <li><b>01</b><span>Precode am Radio ablesen.</span></li>
+    <li><b>02</b><span>Precode prüfen. Kostet nichts.</span></li>
+    <li><b>03</b><span>Demo-Zahlung 5,00 €. Code erscheint oben.</span></li>
+  </ol>
+
+  <div class="meters">
+    <div class="meter"><em>Demo-Daten</em><b id="statOrders">0</b><span>Bestellungen hier</span></div>
+    <div class="meter"><em>Demo-Daten</em><b id="statRev">0,00 €</b><span>simulierter Umsatz</span></div>
+    <div class="meter"><em>geprüft</em><b>25.900</b><span>berechenbare Precodes</span></div>
+    <div class="meter"><em>geprüft</em><b>0</b><span>Abweichungen zu zwei Referenzen</span></div>
+  </div>
+
+  <p class="note">Zahlen aus <b>dieser Testumgebung</b> und aus eigener Prüfung.
+    Keine Bewertungen, keine Erfolgsquoten.</p>
+</section>
+
+<!-- ===================== Protokoll ==================================== -->
+<section class="mod">
+  <div class="mod__head"><span class="mod__no">LOG</span><h2 class="mod__title">Demo-Bestellungen</h2></div>
+  <div class="scroller">
+    <table class="log">
+      <thead><tr><th>Zeit</th><th>Marke</th><th>Precode</th><th>Code</th></tr></thead>
+      <!-- Code-Spalte zeigt nur die Maske: der Server sendet hier keinen Code. -->
+      <tbody id="orders"></tbody>
+    </table>
+  </div>
+</section>
+
+<footer>
+  <b>Testumgebung, kein Verkauf.</b> Codes werden lokal berechnet.
+  Das Verfahren für Renault und Dacia ist öffentlich dokumentiert.
+  Für echten Betrieb fehlen: Lizenz, Impressum, AGB, Zahlungsanbieter.
+</footer>
+</div>
+<script>
+const $ = s => document.querySelector(s);
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const reduceMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const state = {brand:'renault', brandName:'Renault', precode:'', serial:'', code:null, pay:'visa', payName:'Visa', step:1};
+
+/* ===== Sieben-Segment-Anzeige (Inline-SVG, keine externen Assets) ======== */
+const SEGP = {
+  a:'4,2 20,2 17,5.4 7,5.4',
+  b:'21.4,3.6 21.4,18.2 18.2,15.8 18.2,6.8',
+  c:'21.4,22.6 21.4,37.2 18.2,34 18.2,25',
+  d:'7,35.4 17,35.4 20,38.8 4,38.8',
+  e:'2.6,22.6 5.8,25 5.8,34 2.6,37.2',
+  f:'2.6,3.6 5.8,6.8 5.8,15.8 2.6,18.2',
+  g:'7,18.9 17,18.9 20,20.4 17,21.9 7,21.9 4,20.4'
+};
+const SEGD = {'0':'abcdef','1':'bc','2':'abged','3':'abgcd','4':'fgbc','5':'afgcd',
+              '6':'afgedc','7':'abc','8':'abcdefg','9':'abcdfg','-':'g'};
+function segSvg(text){
+  const chars = String(text).split(''), W = 30, H = 42;
+  let out = '';
+  chars.forEach((ch, i) => {
+    const on = SEGD[ch] || '';
+    let inner = '';
+    'abcdefg'.split('').forEach(k => {
+      inner += '<polygon class="' + (on.indexOf(k) >= 0 ? 'seg-on' : 'seg-off') + '" points="' + SEGP[k] + '"/>';
+    });
+    out += '<g transform="translate(' + (i * W) + ',0)">' + inner + '</g>';
+  });
+  return '<svg viewBox="0 0 ' + (chars.length * W) + ' ' + H + '" aria-hidden="true">' + out + '</svg>';
+}
+
+/* ===== Gerätestatus: Nadel, Knopf, LEDs, Display-Zeile =================== */
+const STEPS = {
+  1:{needle:'8%',  knob:'-125deg', text:'Bereit — Fahrzeug wählen, Precode eingeben'},
+  2:{needle:'36%', knob:'-42deg',  text:'Precode geprüft — Code berechenbar'},
+  3:{needle:'64%', knob:'42deg',   text:'Demo-Zahlung läuft'},
+  4:{needle:'91%', knob:'125deg',  text:'Code freigegeben — siehe oben'}
+};
+function setStep(n, override){
+  const s = STEPS[n]; if(!s) return;
+  state.step = n;
+  const root = document.documentElement.style;
+  root.setProperty('--needle', s.needle);
+  root.setProperty('--knob', s.knob);
+  $('#displayMain').textContent = override || s.text;
+  $('#ledPre').classList.toggle('is-on', n >= 2);
+  $('#ledCode').classList.toggle('is-on', n >= 4);
+  document.querySelectorAll('#scaleLabels span').forEach((el,i) => el.classList.toggle('is-active', i === n-1));
+}
+function setBand(name){ $('#displayBand').textContent = 'BAND · ' + name.toUpperCase(); }
+
+function msg(sel, kind, text){
+  const el = $(sel);
+  el.className = 'msg' + (kind ? ' ' + kind : '');
+  el.textContent = text || '';
+}
+function busy(sel, on){
+  const b = $(sel);
+  b.classList.toggle('is-busy', on);
+  b.disabled = on;
+  b.setAttribute('aria-busy', on ? 'true' : 'false');
+}
+/* ==ENGINE-START==============================================================
+   Lokale Rechenlogik — Portierung von app.py, Zeile fuer Zeile.
+   Kein Netzaufruf, kein Socket, keine externen Assets.
+   Bestellungen liegen im localStorage dieses Browsers.
+   ========================================================================= */
+const PRICE_CENTS = 500;                 // 5,00 € — nur Demo
+const CODE_LEN = 4;                      // Renault/Dacia: immer 4 Ziffern
+const MASKED_CODE = '••••';
+const PRECODE_RE = /^[A-Z][0-9]{3}$/;
+const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[A-Za-z]{2,}$/;
+
+const BRANDS = [
+  {
+    "id": "renault",
+    "name": "Renault",
+    "models": "Clio · Megane · Scenic · Laguna · Kangoo · Trafic",
+    "supported": true
+  },
+  {
+    "id": "dacia",
+    "name": "Dacia",
+    "models": "Sandero · Duster · Logan",
+    "supported": true
+  },
+  {
+    "id": "vw",
+    "name": "Volkswagen",
+    "models": "Golf · Polo · Passat",
+    "supported": false
+  },
+  {
+    "id": "ford",
+    "name": "Ford",
+    "models": "Fiesta · Focus",
+    "supported": false
+  },
+  {
+    "id": "nissan",
+    "name": "Nissan",
+    "models": "Qashqai · Juke",
+    "supported": false
+  },
+  {
+    "id": "fiat",
+    "name": "Fiat",
+    "models": "500 · Panda",
+    "supported": false
+  },
+  {
+    "id": "jeep",
+    "name": "Jeep",
+    "models": "Wrangler · Cherokee",
+    "supported": false
+  },
+  {
+    "id": "honda",
+    "name": "Honda",
+    "models": "Civic · CR-V",
+    "supported": false
+  }
+];
+
+/* --- Code-Berechnung: Renault/Dacia (identisch zu renault_code in app.py) - */
+function renaultCode(precode){
+  precode = String(precode === undefined || precode === null ? '' : precode).trim().toUpperCase();
+  if(!PRECODE_RE.test(precode) || precode.slice(0,2) === 'A0'){
+    throw new Error('Precode ungültig. Erwartet: Buchstabe plus 3 Ziffern, nicht A0xx.');
+  }
+  const letter = precode.charCodeAt(0) - 65;
+  const b = precode.charCodeAt(1) - 48;
+  const c = precode.charCodeAt(2) - 48;
+  const d = precode.charCodeAt(3) - 48;
+  const left = letter * 10 + b;
+  if(left === 0) throw new Error('Precode nicht berechenbar.');
+  const right = ((left + c * 10 + d) * 7) % 100;
+  const hundreds = (259 % left) % 100;
+  return String(hundreds).padStart(2,'0') + String(right % 10) + String(Math.floor(right / 10));
+}
+
+/* BEZAHL-SPERRE: gibt wie in app.py bewusst nur den Fehlertext zurueck. */
+function precodeCheck(precode){
+  try{ renaultCode(precode); }catch(e){ return e.message; }
+  return null;
+}
+
+function serialHint(serial){
+  const s = String(serial === undefined || serial === null ? '' : serial).replace(/[^A-Za-z0-9]/g,'').toUpperCase();
+  if(!s) return {recognized:false, reason:'leer'};
+  if(s.indexOf('VF1') === 0) return {recognized:true, brand:'renault', hint:'VIN-Präfix VF1 → Renault'};
+  if(s.indexOf('UU1') === 0) return {recognized:true, brand:'dacia',   hint:'VIN-Präfix UU1 → Dacia'};
+  if(s.indexOf('WVW') === 0 || s.indexOf('WVG') === 0)
+    return {recognized:true, brand:'vw', hint:'VIN-Präfix WV… → Volkswagen'};
+  if(s.indexOf('WF0') === 0) return {recognized:true, brand:'ford',   hint:'VIN-Präfix WF0 → Ford'};
+  if(s.indexOf('ZFA') === 0) return {recognized:true, brand:'fiat',   hint:'VIN-Präfix ZFA → Fiat'};
+  if(s.indexOf('SJN') === 0) return {recognized:true, brand:'nissan', hint:'VIN-Präfix SJN → Nissan'};
+  return {recognized:false, reason:'unbekanntes Präfix — bitte Precode direkt eingeben'};
+}
+
+/* --- Demo-Bestellungen (localStorage statt SQLite) ----------------------- */
+const LS_KEY = 'radiocode-demo-orders';
+
+function dbLoad(){
+  try{
+    const rows = JSON.parse(localStorage.getItem(LS_KEY) || '[]');
+    return Array.isArray(rows) ? rows : [];
+  }catch(e){ return []; }
+}
+function dbSave(rows){
+  try{ localStorage.setItem(LS_KEY, JSON.stringify(rows)); }catch(e){}
+}
+function isoLocal(dt){
+  const p = n => String(n).padStart(2,'0');
+  const off = -dt.getTimezoneOffset(), a = Math.abs(off);
+  return dt.getFullYear() + '-' + p(dt.getMonth()+1) + '-' + p(dt.getDate()) + 'T' +
+         p(dt.getHours()) + ':' + p(dt.getMinutes()) + ':' + p(dt.getSeconds()) +
+         (off >= 0 ? '+' : '-') + p(Math.floor(a/60)) + ':' + p(a%60);
+}
+function receiptId(){
+  const buf = new Uint8Array(4);
+  if(window.crypto && window.crypto.getRandomValues) window.crypto.getRandomValues(buf);
+  else for(let i=0;i<4;i++) buf[i] = Math.floor(Math.random()*256);
+  let hex = '';
+  for(let i=0;i<4;i++) hex += buf[i].toString(16).padStart(2,'0');
+  return 'DEMO-' + hex.toUpperCase();
+}
+function dbAddOrder(brand, precode, email){
+  const rows = dbLoad();
+  /* BEZAHL-SPERRE: der Code wird bewusst NICHT abgelegt. Im Browser waere er
+     sonst ueber die Entwicklerkonsole lesbar. Neu berechnen kostet nichts. */
+  const order = {
+    id: (rows.length ? rows[rows.length-1].id : 0) + 1,
+    created: isoLocal(new Date()),
+    receipt: receiptId(),
+    brand: brand, precode: precode, email: email || '',
+    price_cents: PRICE_CENTS, payment: 'simuliert'
+  };
+  rows.push(order);
+  dbSave(rows);
+  return {order_id: order.id, receipt: order.receipt, created: order.created};
+}
+function dbOrders(limit){
+  limit = limit || 12;
+  return dbLoad().slice().reverse().slice(0, limit).map(o => ({
+    created: o.created, receipt: o.receipt, brand: o.brand,
+    precode: o.precode, price_cents: o.price_cents, code_masked: MASKED_CODE
+  }));
+}
+function dbStats(){
+  const rows = dbLoad();
+  let sum = 0;
+  rows.forEach(o => { sum += (o.price_cents || 0); });
+  return {orders: rows.length, revenue_cents: sum};
+}
+
+/* --- Ersetzt den HTTP-Aufruf: gleiche Pfade, gleiche Antworten ----------- */
+async function api(path, body){
+  const data = body || {};
+  const str = (v, dflt) => String(v === undefined || v === null ? dflt : v);
+
+  if(path === '/api/brands'){
+    return {status:200, data:{brands: BRANDS, price_cents: PRICE_CENTS}};
+  }
+  if(path === '/api/orders'){
+    return {status:200, data:{orders: dbOrders(), stats: dbStats()}};
+  }
+  if(path === '/api/lookup'){
+    const info = serialHint(str(data.serial, ''));
+    const supported = info.recognized ? (info.brand === 'renault' || info.brand === 'dacia') : false;
+    return {status:200, data:{
+      ok:true, info: info, supported: supported,
+      note: supported ? 'Marke wird unterstützt. Weiter mit dem Precode.'
+                      : 'Marke geht in der Demo nicht. Nur Renault und Dacia.'
+    }};
+  }
+  if(path === '/api/check'){
+    const precode = str(data.precode, '').trim().toUpperCase();
+    const brand = str(data.brand, 'renault').toLowerCase();
+    const err = precodeCheck(precode);              // liefert nie den Code
+    if(err) return {status:400, data:{ok:false, error:err}};
+    if(brand !== 'renault' && brand !== 'dacia')
+      return {status:400, data:{ok:false, error:'Marke geht in der Demo nicht.'}};
+    /* BEZAHL-SPERRE: nur Maske und Laenge. */
+    return {status:200, data:{
+      ok:true, brand: brand, precode: precode, available:true,
+      masked_code: MASKED_CODE, code_length: CODE_LEN,
+      note:'Code ist berechenbar. Weiter zur Demo-Zahlung.'
+    }};
+  }
+  if(path === '/api/buy'){
+    const precode = str(data.precode, '').trim().toUpperCase();
+    const brand = str(data.brand, 'renault').toLowerCase();
+    const card = str(data.card, '').trim();
+    const email = str(data.email, '').trim();
+    let code;
+    try{ code = renaultCode(precode); }
+    catch(e){ return {status:400, data:{ok:false, error:e.message}}; }
+    if(brand !== 'renault' && brand !== 'dacia')
+      return {status:400, data:{ok:false, error:'Marke geht in der Demo nicht.'}};
+    if(card.replace(/\D/g,'').length < 12)
+      return {status:400, data:{ok:false, error:'Kartennummer unvollständig. Mindestens 12 Ziffern.'}};
+    if(email && !EMAIL_RE.test(email))
+      return {status:400, data:{ok:false, error:'E-Mail-Adresse sieht falsch aus.'}};
+    const order = dbAddOrder(brand, precode, email);
+    return {status:200, data:Object.assign({
+      ok:true, code: code, price_cents: PRICE_CENTS, payment:'simuliert',
+      email_sent: !!email, email: email,
+      disclaimer:'Demo — keine echte Zahlung.'
+    }, order)};
+  }
+  return {status:404, data:{error:'not found'}};
+}
+/* ==ENGINE-END============================================================= */
+const money = c => (c/100).toFixed(2).replace('.',',') + ' €';
+/* BEZAHL-SPERRE: vor der Zahlung zeigt die Seite nur diese Maske. */
+const MASK = '\u2022\u2022\u2022\u2022';
+
+/* ===== Zahlungsarten (nur Auswahl — Demo, keine echten Zahlungsdaten) ==== */
+const MARK = {
+  wallet:'<svg width="26" height="20" viewBox="0 0 26 20" fill="none" stroke="#cfd8de" stroke-width="1.6"><rect x="1.5" y="3.5" width="23" height="15" rx="3"/><path d="M17 11h4" stroke="#ffb02e" stroke-width="2.6" stroke-linecap="round"/></svg>',
+  phone:'<svg width="26" height="20" viewBox="0 0 26 20" fill="none" stroke="#cfd8de" stroke-width="1.6"><rect x="4.5" y="1.5" width="12" height="17" rx="2.5"/><path d="M20 6.5a6 6 0 0 1 0 7M23 4a9.5 9.5 0 0 1 0 12" stroke="#ffb02e" stroke-linecap="round"/></svg>',
+  pp:'<svg width="26" height="20" viewBox="0 0 26 20" fill="none"><path d="M8.5 17.5 11 2.5h5.2c3 0 4.6 1.8 4.1 4.5-.5 3-2.8 4.6-6 4.6h-2.1l-1 5.9z" stroke="#cfd8de" stroke-width="1.5" stroke-linejoin="round"/><path d="M5.5 17.5 8 2.5" stroke="#ffb02e" stroke-width="1.5" stroke-linecap="round"/></svg>',
+  card:'<svg width="26" height="20" viewBox="0 0 26 20" fill="none" stroke="#cfd8de" stroke-width="1.6"><rect x="1.5" y="2.5" width="23" height="16" rx="2.5"/><path d="M1.5 8h23" stroke="#ffb02e" stroke-width="2.2"/><path d="M5 13.5h5" stroke-linecap="round"/></svg>',
+  rings:'<svg width="26" height="20" viewBox="0 0 26 20" fill="none"><circle cx="10" cy="10" r="6.2" stroke="#cfd8de" stroke-width="1.6"/><circle cx="16" cy="10" r="6.2" stroke="#ffb02e" stroke-width="1.6"/></svg>'
+};
+const PAYS = [
+  {id:'gpay',   name:'Google Pay',  sub:'Wallet', mark:'wallet', wallet:'Google-Konto (Demo)'},
+  {id:'apay',   name:'Apple Pay',   sub:'Wallet', mark:'phone',  wallet:'Apple-Konto (Demo)'},
+  {id:'paypal', name:'PayPal',      sub:'Konto',  mark:'pp',     wallet:'PayPal-Konto (Demo)'},
+  {id:'visa',   name:'Visa',        sub:'Karte',  mark:'card',   wallet:null},
+  {id:'mc',     name:'Mastercard',  sub:'Karte',  mark:'rings',  wallet:null}
+];
+const DEMO_PAN = '4242 4242 4242 4242';
+
+function renderPays(){
+  const g = $('#payMethods');
+  g.innerHTML = '';
+  PAYS.forEach(p => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'pay'; b.dataset.pay = p.id;
+    b.setAttribute('role','radio'); b.setAttribute('aria-checked','false');
+    b.innerHTML = MARK[p.mark] +
+      '<span class="pay__txt"><span class="pay__name"></span><span class="pay__sub"></span></span>' +
+      '<i class="led pay__led" aria-hidden="true"></i>';
+    b.querySelector('.pay__name').textContent = p.name;
+    b.querySelector('.pay__sub').textContent = p.sub + ' · Demo';
+    b.onclick = () => selectPay(p.id);
+    g.appendChild(b);
+  });
+  const wr = document.createElement('div');
+  wr.className = 'field hide'; wr.id = 'walletRow';
+  wr.innerHTML = '<p class="eng" style="margin:0 0 6px;font-size:10.5px">Hinterlegtes Demo-Konto</p>' +
+    '<div class="ticket"><span class="ticket__label" id="walletTxt"></span>' +
+    '<span class="eng" style="font-size:12px;color:var(--amber)">Demo · •••• 4242</span></div>';
+  g.insertAdjacentElement('afterend', wr);
+}
+function selectPay(id){
+  const p = PAYS.find(x => x.id === id) || PAYS[3];
+  state.pay = p.id; state.payName = p.name;
+  document.querySelectorAll('#payMethods .pay').forEach(x => {
+    const on = x.dataset.pay === p.id;
+    x.setAttribute('aria-checked', on ? 'true' : 'false');
+    x.setAttribute('tabindex', on ? '0' : '-1');
+    x.querySelector('.pay__led').classList.toggle('is-amber', on);
+  });
+  $('#cardRow').classList.toggle('hide', !!p.wallet);
+  $('#walletRow').classList.toggle('hide', !p.wallet);
+  if(p.wallet){
+    $('#walletTxt').textContent = p.wallet;
+    if(!$('#card').value.trim()) $('#card').value = DEMO_PAN;
+  }
+}
+
+/* ===== Marken als Stationstasten ======================================== */
+function selectBrand(id, name){
+  state.brand = id; state.brandName = name;
+  document.querySelectorAll('#brandGrid .brand').forEach(x => {
+    const on = x.dataset.brand === id;
+    x.classList.toggle('is-selected', on);
+    x.setAttribute('aria-pressed', on ? 'true' : 'false');
+  });
+  $('#ledBrand').classList.add('is-on');
+  setBand(name);
+}
+async function loadBrands(){
+  const {data} = await api('/api/brands');
+  $('#price').textContent = money(data.price_cents) + ' (Demo)';
+  $('#btnBuy').querySelector('.btn__main').textContent = money(data.price_cents) + ' zahlen';
+  const g = $('#brandGrid'); g.innerHTML = '';
+  data.brands.forEach((b,i) => {
+    const d = document.createElement('button');
+    d.type = 'button'; d.className = 'brand'; d.dataset.brand = b.id;
+    d.dataset.supported = b.supported ? '1' : '0';
+    d.setAttribute('aria-pressed','false');
+    if(!b.supported) d.setAttribute('aria-disabled','true');
+    d.innerHTML =
+      '<span class="brand__top"><i class="led' + (b.supported ? ' is-on' : '') + '"></i>' +
+      '<span class="brand__no">P' + (i+1) + '</span></span>' +
+      '<b></b><span class="models"></span><span class="tag"></span>';
+    d.querySelector('b').textContent = b.name;
+    d.querySelector('.models').textContent = b.models;
+    d.querySelector('.tag').textContent = b.supported ? 'berechenbar' : 'Lizenz nötig';
+    d.onclick = () => {
+      if(!b.supported){
+        msg('#lookupOut','err', b.name + ' geht in der Demo nicht. Nur Renault und Dacia.');
+        return;
+      }
+      selectBrand(b.id, b.name);
+      msg('#lookupOut','ok','Marke gewählt: ' + b.name);
+    };
+    g.appendChild(d);
+  });
+  const first = data.brands.find(b => b.id === state.brand);
+  if(first) selectBrand(first.id, first.name);
+}
+
+async function loadStats(){
+  const {data} = await api('/api/orders');
+  $('#statOrders').textContent = data.stats.orders;
+  $('#statRev').textContent = money(data.stats.revenue_cents);
+  const tb = $('#orders'); tb.innerHTML = '';
+  if(!data.orders.length){
+    const tr = document.createElement('tr'); tr.className = 'empty';
+    const td = document.createElement('td'); td.colSpan = 4;
+    td.textContent = 'noch keine Demo-Bestellungen';
+    tr.appendChild(td); tb.appendChild(tr); return;
+  }
+  data.orders.forEach(o => {
+    const tr = document.createElement('tr');
+    /* o.code gibt es nicht — der Server liefert nur o.code_masked. */
+    [o.created.slice(5,16).replace('T',' '), o.brand, o.precode, o.code_masked || MASK].forEach(v => {
+      const td = document.createElement('td'); td.textContent = v; tr.appendChild(td);
+    });
+    tb.appendChild(tr);
+  });
+}
+
+/* ===== Schritt 1: Seriennummer ========================================== */
+$('#btnLookup').onclick = async () => {
+  busy('#btnLookup', true); msg('#lookupOut','busy','Seriennummer wird geprüft …');
+  try{
+    const {data} = await api('/api/lookup', {serial: $('#serial').value});
+    if(data.info && data.info.brand){
+      const b = document.querySelector('#brandGrid .brand[data-brand="' + data.info.brand + '"]');
+      if(b && b.dataset.supported === '1') selectBrand(data.info.brand, b.querySelector('b').textContent);
+    }
+    msg('#lookupOut', data.supported ? 'ok' : 'err',
+        (data.info.hint || data.info.reason || '') + ' — ' + data.note);
+  }catch(e){
+    msg('#lookupOut','err','Verbindung zum Dienst fehlgeschlagen.');
+  }finally{ busy('#btnLookup', false); }
+};
+
+/* ===== Schritt 2: Precode prüfen ======================================== */
+$('#btnCheck').onclick = async () => {
+  state.precode = $('#precode').value.trim().toUpperCase();
+  busy('#btnCheck', true); msg('#checkOut','busy','Precode wird geprüft …');
+  try{
+    const {data} = await api('/api/check', {brand:state.brand, precode:state.precode});
+    if(!data.ok){
+      msg('#checkOut','err', data.error);
+      $('#payCard').classList.add('hide');
+      setStep(1, 'Precode abgelehnt — bitte prüfen');
+      return;
+    }
+    $('#maskedCode').textContent = data.masked_code || MASK;
+    msg('#checkOut','ok','Precode ' + data.precode + ' gültig. Code ist berechenbar.');
+    $('#payCard').classList.remove('hide');
+    $('#resultCard').classList.add('hide');
+    setStep(2);
+  }catch(e){
+    msg('#checkOut','err','Verbindung zum Dienst fehlgeschlagen.');
+  }finally{ busy('#btnCheck', false); }
+};
+
+/* ===== Schritt 3: Demo-Zahlung mit inszenierter Verarbeitung ============ */
+function procSet(pct, text){
+  const root = document.documentElement.style;
+  root.setProperty('--p', pct);
+  root.setProperty('--vu', (-78 + (pct/100) * 156).toFixed(1) + 'deg');
+  if(text) $('#procText').textContent = text;
+}
+const PROC_STAGES = [
+  ['VERBINDUNG \u2026',        16],
+  ['ZAHLUNG L\u00c4UFT \u2026',   46],
+  ['FREIGABE \u2026',          72],
+  ['CODE WIRD BERECHNET \u2026', 92]
+];
+
+$('#btnBuy').onclick = async () => {
+  const proc = $('#proc');
+  busy('#btnBuy', true);
+  msg('#buyOut','', '');
+  setStep(3);
+  proc.classList.remove('hide','is-done','is-fail');
+  proc.classList.add('is-run');
+  proc.setAttribute('aria-hidden','false');
+  procSet(4, state.payName.toUpperCase() + ' (DEMO)');
+
+  let result = null, failed = null;
+  const call = api('/api/buy', {brand:state.brand, precode:state.precode,
+                                card:$('#card').value, email:$('#email').value})
+    .then(r => { result = r; }).catch(() => { failed = 'net'; });
+
+  const quick = reduceMotion();
+  if(quick){
+    procSet(88, 'ZAHLUNG LÄUFT …');
+  }else{
+    for(const st of PROC_STAGES){
+      procSet(st[1], st[0]);
+      await sleep(430);
+      if(failed || (result && !result.data.ok)) break;
+    }
+  }
+  await call;
+
+  proc.classList.remove('is-run');
+
+  if(failed){
+    proc.classList.add('is-fail');
+    procSet(100, 'KEINE VERBINDUNG');
+    msg('#buyOut','err','Verbindung zum Dienst fehlgeschlagen.');
+    setStep(2); busy('#btnBuy', false); return;
+  }
+  const data = result.data;
+  if(!data.ok){
+    proc.classList.add('is-fail');
+    procSet(100, 'DEMO-ZAHLUNG ABGELEHNT');
+    msg('#buyOut','err', data.error);
+    setStep(2, 'Demo-Zahlung abgelehnt'); busy('#btnBuy', false); return;
+  }
+
+  proc.classList.add('is-done');
+  procSet(100, 'DEMO-ZAHLUNG BESTÄTIGT');
+  if(!quick) await sleep(560);
+
+  showCode(data);
+  busy('#btnBuy', false);
+};
+
+function showCode(data){
+  state.code = data.code;
+  $('#theCode').innerHTML = segSvg(data.code);
+  $('#theCode').setAttribute('aria-label', 'Freischaltcode ' + data.code.split('').join(' '));
+  $('#codeMeta').textContent = 'Code · ' + state.brandName + ' · Precode ' + state.precode;
+
+  const serial = $('#serial').value.trim().toUpperCase();
+  const rows = [
+    ['Beleg-Nr.', data.receipt],
+    ['Seriennummer', serial || 'nicht angegeben'],
+    ['Precode', state.precode + ' · ' + state.brandName],
+    ['Betrag', money(data.price_cents) + ' (Demo) · ' + state.payName],
+    ['Zeitpunkt', data.created.slice(0,16).replace('T',' ') + ' Uhr']
+  ];
+  const dl = $('#receipt');
+  dl.innerHTML = '';
+  rows.forEach(r => {
+    const row = document.createElement('div');
+    const dt = document.createElement('dt'); dt.textContent = r[0];
+    const dd = document.createElement('dd'); dd.textContent = r[1];
+    row.appendChild(dt); row.appendChild(dd); dl.appendChild(row);
+  });
+
+  msg('#buyOut','ok', data.disclaimer +
+      (data.email_sent ? ' Versand an ' + data.email + ' ist simuliert.' : ''));
+  $('#payCard').classList.add('hide');
+  $('#resultCard').classList.remove('hide');
+  setStep(4);
+  loadStats();
+  window.scrollTo({top:0, behavior: reduceMotion() ? 'auto' : 'smooth'});
+  $('#btnCopy').focus({preventScroll:true});
+}
+
+/* ===== Ergebnis-Aktionen =============================================== */
+$('#btnCopy').onclick = async () => {
+  if(!state.code) return;
+  let ok = false;
+  try{ await navigator.clipboard.writeText(state.code); ok = true; }
+  catch(e){
+    const ta = document.createElement('textarea');
+    ta.value = state.code; ta.setAttribute('readonly',''); ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try{ ok = document.execCommand('copy'); }catch(e2){ ok = false; }
+    document.body.removeChild(ta);
+  }
+  const b = $('#btnCopy'), old = b.textContent;
+  b.textContent = ok ? 'Kopiert' : 'Code: ' + state.code;
+  setTimeout(() => { b.textContent = old; }, 1800);
+};
+$('#btnAgain').onclick = () => {
+  $('#resultCard').classList.add('hide');
+  $('#proc').classList.add('hide');
+  $('#precode').value = ''; state.precode = ''; state.code = null;
+  $('#theCode').innerHTML = ''; $('#maskedCode').textContent = MASK;
+  $('#theCode').setAttribute('aria-label','Freischaltcode noch nicht ermittelt');
+  $('#payCard').classList.add('hide');
+  msg('#checkOut','',''); msg('#buyOut','','');
+  setStep(1);
+  window.scrollTo({top:0, behavior: reduceMotion() ? 'auto' : 'smooth'});
+  $('#precode').focus({preventScroll:true});
+};
+
+$('#precode').addEventListener('input', e => {
+  e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g,'');
+});
+
+/* ===== Start =========================================================== */
+renderPays();
+selectPay('visa');
+setStep(1);
+loadBrands();
+loadStats();
+</script></body></html>
