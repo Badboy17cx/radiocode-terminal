@@ -392,6 +392,8 @@ label.f small{display:block;font-weight:400;color:var(--muted);font-size:12.5px;
 .gstep p{font-size:15.5px;color:var(--ink-2);line-height:1.6;max-width:70ch}
 .gstep--warn{background:var(--red-wash)}
 .gstep--warn .gstep__n{color:var(--red)}
+.gstep--go{background:var(--paper-2)}
+.gstep--go .gstep__n{color:var(--accent)}
 
 /* --- Ablauf -------------------------------------------------------------- */
 .flow{display:grid;gap:28px}
@@ -803,7 +805,20 @@ details p{padding-bottom:20px;font-size:15.5px;color:var(--ink-2);line-height:1.
   </div>
 </section>
 
-<section class="band band--paper2" id="finder">
+<section class="band band--paper2" id="anleitung">
+  <div class="wrap">
+    <div class="shead">
+      <span class="shead__top lbl">Für jedes Modell <i></i></span>
+      <h2>Jedes Auto tickt anders.</h2>
+      <p>Andere Tastenkombination, anderer Ort für die Nummer, andere Sperre nach Fehlversuchen.
+        Genau daran sperren die meisten ihr Gerät endgültig. Marke wählen, Anleitung lesen.</p>
+    </div>
+    <div class="gpicks" id="guidePick" role="group" aria-label="Marke für die Anleitung"></div>
+    <div class="guide" id="guideBox"></div>
+  </div>
+</section>
+
+<section class="band" id="finder">
   <div class="wrap two">
     <div>
       <div class="shead">
@@ -841,19 +856,6 @@ details p{padding-bottom:20px;font-size:15.5px;color:var(--ink-2);line-height:1.
       </div>
       <a class="btn btn--wide" href="#top" style="margin-top:22px">Nach oben, Code anfordern</a>
     </div>
-  </div>
-</section>
-
-<section class="band" id="anleitung">
-  <div class="wrap">
-    <div class="shead">
-      <span class="shead__top lbl">Für jedes Modell <i></i></span>
-      <h2>Jedes Auto tickt anders.</h2>
-      <p>Andere Tastenkombination, anderer Ort für die Nummer, andere Sperre nach Fehlversuchen.
-        Genau daran sperren die meisten ihr Gerät endgültig. Marke wählen, Anleitung lesen.</p>
-    </div>
-    <div class="gpicks" id="guidePick" role="group" aria-label="Marke für die Anleitung"></div>
-    <div class="guide" id="guideBox"></div>
   </div>
 </section>
 
@@ -1238,7 +1240,6 @@ const BRANDS = [
     "vin": "VF1",
     "eingabe": "Buchstabe plus 3 Ziffern, z. B. A123",
     "beispiel": "A123",
-    "frisch": false,
     "models": "Clio · Mégane · Scénic · Kangoo · Trafic",
     "price_cents": 498,
     "supported": true,
@@ -1255,7 +1256,6 @@ const BRANDS = [
     "vin": "UU1",
     "eingabe": "Buchstabe plus 3 Ziffern, z. B. A123",
     "beispiel": "A123",
-    "frisch": false,
     "models": "Sandero · Duster · Logan · Lodgy",
     "price_cents": 498,
     "supported": true,
@@ -1272,7 +1272,6 @@ const BRANDS = [
     "vin": "WVW",
     "eingabe": "",
     "beispiel": "",
-    "frisch": false,
     "models": "Golf · Polo · Passat · Touran · Tiguan",
     "price_cents": 498,
     "supported": false,
@@ -1289,7 +1288,6 @@ const BRANDS = [
     "vin": "WAU",
     "eingabe": "",
     "beispiel": "",
-    "frisch": false,
     "models": "A3 · A4 · A6 · Q5",
     "price_cents": 498,
     "supported": false,
@@ -1306,7 +1304,6 @@ const BRANDS = [
     "vin": "TMB",
     "eingabe": "",
     "beispiel": "",
-    "frisch": false,
     "models": "Octavia · Fabia · Superb",
     "price_cents": 498,
     "supported": false,
@@ -1323,7 +1320,6 @@ const BRANDS = [
     "vin": "VSS",
     "eingabe": "",
     "beispiel": "",
-    "frisch": false,
     "models": "Ibiza · Leon · Altea",
     "price_cents": 498,
     "supported": false,
@@ -1340,7 +1336,6 @@ const BRANDS = [
     "vin": "WF0",
     "eingabe": "M plus 6 Ziffern, z. B. M123456",
     "beispiel": "M123456",
-    "frisch": true,
     "models": "Fiesta · Focus · Mondeo · Transit",
     "price_cents": 498,
     "supported": true,
@@ -1357,7 +1352,6 @@ const BRANDS = [
     "vin": "ZFA",
     "eingabe": "",
     "beispiel": "",
-    "frisch": false,
     "models": "500 · Panda · Punto · Ducato",
     "price_cents": 498,
     "supported": false,
@@ -1374,7 +1368,6 @@ const BRANDS = [
     "vin": "W0L",
     "eingabe": "",
     "beispiel": "",
-    "frisch": false,
     "models": "Astra · Corsa · Insignia · Zafira",
     "price_cents": 498,
     "supported": false,
@@ -1391,7 +1384,6 @@ const BRANDS = [
     "vin": "VF3",
     "eingabe": "",
     "beispiel": "",
-    "frisch": false,
     "models": "206 · 207 · 308 · Partner",
     "price_cents": 498,
     "supported": false,
@@ -1408,7 +1400,6 @@ const BRANDS = [
     "vin": "VF7",
     "eingabe": "",
     "beispiel": "",
-    "frisch": false,
     "models": "C3 · C4 · Berlingo · Jumpy",
     "price_cents": 498,
     "supported": false,
@@ -1425,7 +1416,6 @@ const BRANDS = [
     "vin": "SJN",
     "eingabe": "",
     "beispiel": "",
-    "frisch": false,
     "models": "Qashqai · Juke · Micra · Navara",
     "price_cents": 498,
     "supported": false,
@@ -1442,7 +1432,6 @@ const BRANDS = [
     "vin": "JT1",
     "eingabe": "",
     "beispiel": "",
-    "frisch": false,
     "models": "Yaris · Auris · Corolla · RAV4",
     "price_cents": 498,
     "supported": false,
@@ -1459,7 +1448,6 @@ const BRANDS = [
     "vin": "SHH",
     "eingabe": "",
     "beispiel": "",
-    "frisch": false,
     "models": "Civic · Jazz · CR-V · Accord",
     "price_cents": 498,
     "supported": false,
@@ -1476,7 +1464,6 @@ const BRANDS = [
     "vin": "WBA",
     "eingabe": "",
     "beispiel": "",
-    "frisch": false,
     "models": "1er · 3er · 5er · X3",
     "price_cents": 498,
     "supported": false,
@@ -1493,7 +1480,6 @@ const BRANDS = [
     "vin": "WDB",
     "eingabe": "",
     "beispiel": "",
-    "frisch": false,
     "models": "A-Klasse · C-Klasse · Sprinter · Vito",
     "price_cents": 498,
     "supported": false,
@@ -1510,7 +1496,6 @@ const BRANDS = [
     "vin": "1J4",
     "eingabe": "",
     "beispiel": "",
-    "frisch": false,
     "models": "Wrangler · Cherokee · Renegade",
     "price_cents": 498,
     "supported": false,
@@ -1527,7 +1512,6 @@ const BRANDS = [
     "vin": "1C3",
     "eingabe": "",
     "beispiel": "",
-    "frisch": false,
     "models": "300C · Voyager · PT Cruiser",
     "price_cents": 498,
     "supported": false,
@@ -1544,7 +1528,6 @@ const BRANDS = [
     "vin": "1B3",
     "eingabe": "",
     "beispiel": "",
-    "frisch": false,
     "models": "RAM · Journey · Caliber",
     "price_cents": 498,
     "supported": false,
@@ -1561,7 +1544,6 @@ const BRANDS = [
     "vin": "ZAR",
     "eingabe": "",
     "beispiel": "",
-    "frisch": false,
     "models": "Giulietta · MiTo · 159",
     "price_cents": 498,
     "supported": false,
@@ -1578,7 +1560,6 @@ const BRANDS = [
     "vin": "ZLA",
     "eingabe": "",
     "beispiel": "",
-    "frisch": false,
     "models": "Ypsilon · Delta · Musa",
     "price_cents": 498,
     "supported": false,
@@ -1595,7 +1576,6 @@ const BRANDS = [
     "vin": "TMA",
     "eingabe": "",
     "beispiel": "",
-    "frisch": false,
     "models": "i20 · i30 · Tucson · Santa Fe",
     "price_cents": 498,
     "supported": false,
@@ -1612,7 +1592,6 @@ const BRANDS = [
     "vin": "KNA",
     "eingabe": "",
     "beispiel": "",
-    "frisch": false,
     "models": "Ceed · Rio · Sportage",
     "price_cents": 498,
     "supported": false,
@@ -1629,7 +1608,6 @@ const BRANDS = [
     "vin": "JMZ",
     "eingabe": "",
     "beispiel": "",
-    "frisch": false,
     "models": "2 · 3 · 6 · CX-5",
     "price_cents": 498,
     "supported": false,
@@ -1646,7 +1624,6 @@ const BRANDS = [
     "vin": "JMB",
     "eingabe": "",
     "beispiel": "",
-    "frisch": false,
     "models": "Colt · ASX · Outlander",
     "price_cents": 498,
     "supported": false,
@@ -1663,7 +1640,6 @@ const BRANDS = [
     "vin": "TSM",
     "eingabe": "",
     "beispiel": "",
-    "frisch": false,
     "models": "Swift · Vitara · Jimny",
     "price_cents": 498,
     "supported": false,
@@ -1680,7 +1656,6 @@ const BRANDS = [
     "vin": "YV1",
     "eingabe": "",
     "beispiel": "",
-    "frisch": false,
     "models": "V40 · V70 · XC60",
     "price_cents": 498,
     "supported": false,
@@ -1697,7 +1672,6 @@ const BRANDS = [
     "vin": "SAJ",
     "eingabe": "",
     "beispiel": "",
-    "frisch": false,
     "models": "X-Type · S-Type · XF",
     "price_cents": 498,
     "supported": false,
@@ -2179,16 +2153,11 @@ function brandCard(b){
   d.querySelector('.brand__name').textContent = b.name;
   d.querySelector('.brand__models').textContent = b.models;
   d.querySelector('.brand__state').textContent = b.supported ? 'Sofort' : 'In Vorbereitung';
+  /* Immer dasselbe Ziel — ein Klick, der mal hoch und mal runter springt,
+     wirkt wie ein Fehler. Weiter geht es aus der Anleitung heraus. */
   d.onclick = () => {
     selectBrand(b.id);
-    if(b.supported){
-      /* Marke gewaehlt heisst: rauf zur Eingabe, nicht in ein zweites Formular. */
-      setStep(1);
-      document.getElementById('top').scrollIntoView({block:'start', behavior: reduceMotion() ? 'auto' : 'smooth'});
-      setTimeout(() => $('#precode').focus({preventScroll:true}), reduceMotion() ? 0 : 520);
-    }else{
-      $('#anleitung').scrollIntoView({block:'start', behavior: reduceMotion() ? 'auto' : 'smooth'});
-    }
+    $('#anleitung').scrollIntoView({block:'start', behavior: reduceMotion() ? 'auto' : 'smooth'});
   };
   return d;
 }
@@ -2228,12 +2197,35 @@ function showGuide(id){
       '<div class="gstep"><span class="gstep__n">Schritt 1</span><h4>Nummer finden</h4><p class="g-find"></p></div>' +
       '<div class="gstep"><span class="gstep__n">Schritt 2</span><h4>Code eingeben</h4><p class="g-enter"></p></div>' +
       '<div class="gstep gstep--warn"><span class="gstep__n">Achtung</span><h4>Nach Fehlversuchen</h4><p class="g-lock"></p></div>' +
+      '<div class="gstep gstep--go" id="guideGo"></div>' +
     '</div>';
   box.querySelector('.g-name').textContent = b.name;
   box.querySelector('.g-models').textContent = b.models;
   box.querySelector('.g-find').textContent = g.find;
   box.querySelector('.g-enter').textContent = g.enter;
   box.querySelector('.g-lock').textContent = g.lock;
+
+  const go = box.querySelector('#guideGo');
+  if(b.supported){
+    go.innerHTML = '<span class="gstep__n">Nummer gefunden?</span>' +
+      '<h4>Code für ' + b.name + ' holen</h4>' +
+      '<p>Nummer im Format <b>' + (b.beispiel || 'A123') + '</b> eintippen — die Prüfung kostet nichts.</p>' +
+      '<button type="button" class="btn" id="guideGoBtn" style="margin-top:12px">Zur Eingabe</button>';
+    go.querySelector('#guideGoBtn').onclick = () => {
+      setStep(1);
+      $('#precode').placeholder = b.beispiel || 'A123';
+      document.getElementById('top').scrollIntoView({block:'start', behavior: reduceMotion() ? 'auto' : 'smooth'});
+      setTimeout(() => $('#precode').focus({preventScroll:true}), reduceMotion() ? 0 : 520);
+    };
+  }else{
+    /* Kein Bezahlknopf fuer etwas, das wir nicht koennen — stattdessen der Weg,
+       der beim Haendler oft kostenlos ist. */
+    go.innerHTML = '<span class="gstep__n">Noch nicht bei uns</span>' +
+      '<h4>' + b.name + ' können wir noch nicht berechnen</h4>' +
+      '<p>Dafür fehlt uns die Lizenz. Beim Vertragshändler bekommen Sie den Code gegen ' +
+      'Fahrzeugschein, bei vielen Marken kostenlos. Sobald wir ' + b.name + ' anbieten, ' +
+      'steht es hier.</p>';
+  }
   document.querySelectorAll('#guidePick .gpick').forEach(x =>
     x.setAttribute('aria-pressed', x.dataset.g === id ? 'true' : 'false'));
 }
@@ -2361,8 +2353,7 @@ function showFound(precode){
     (b && b.icon ? brandLogo(b, 'found__logo') : '') +
     '<span><b></b><span></span></span>';
   $('#qFound b').textContent = 'Passt — ' + (b ? b.name : '') + ' erkannt';
-  $('#qFound span span').textContent = 'Nummer ' + precode + ' · Code ist berechenbar' +
-    (b && b.frisch ? ' · Verfahren neu, noch nicht am Gerät bestätigt' : '');
+  $('#qFound span span').textContent = 'Nummer ' + precode + ' · Code ist berechenbar';
 }
 
 /* ===== Schritt 3: Zahlung =============================================== */
