@@ -43,36 +43,36 @@
 }
 
 :root{
-  --paper:#f7f5f1;
-  --paper-2:#efece5;
-  --card:#fffefc;
-  --ink:#17140f;
-  --ink-2:#4a443a;
-  --muted:#877f71;
-  --line:#e2dbcf;
-  --line-2:#efeae1;
-  --amber:#b8690f;
-  --amber-lt:#e09527;
-  --amber-wash:#fbf1e0;
-  --green:#1a7a52;
-  --green-wash:#e8f3ed;
+  --paper:#f4f7fb;
+  --paper-2:#e8eef7;
+  --card:#ffffff;
+  --ink:#0e1c2c;
+  --ink-2:#3b4f64;
+  --muted:#65798e;
+  --line:#d9e2ee;
+  --line-2:#eaf0f7;
+  --accent:#14549e;
+  --accent-lt:#3d86dd;
+  --accent-wash:#e9f1fb;
+  --green:#0b7a55;
+  --green-wash:#e6f5ef;
   --red:#b02a1f;
   --red-wash:#fbeceb;
   --display:#3ddc97;
-  --dark:#17140f;
+  --dark:#0c1a2b;
   --sans:'Archivo',system-ui,-apple-system,'Segoe UI',sans-serif;
   --mono:ui-monospace,SFMono-Regular,'SF Mono',Menlo,Consolas,monospace;
   --r:3px;
 }
 @media (prefers-color-scheme: dark){
   :root{
-    --paper:#14120f; --paper-2:#1c1915; --card:#1b1814;
-    --ink:#f6f2ea; --ink-2:#cbc3b6; --muted:#98907f;
-    --line:#312c24; --line-2:#262119;
-    --amber:#e8a33d; --amber-lt:#f5bb63; --amber-wash:#2a2013;
-    --green:#4fd39a; --green-wash:#13291f;
+    --paper:#0b1420; --paper-2:#111c2b; --card:#132030;
+    --ink:#eef4fb; --ink-2:#c0cfdf; --muted:#8ba0b8;
+    --line:#22374f; --line-2:#1a2939;
+    --accent:#5c9bff; --accent-lt:#8dbaff; --accent-wash:#132743;
+    --green:#3ecf9a; --green-wash:#0f2a21;
     --red:#ff8579; --red-wash:#2d1715;
-    --dark:#0e0c09;
+    --dark:#070e18;
   }
 }
 
@@ -92,19 +92,19 @@ img{max-width:100%}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .skip{position:absolute;left:-9999px;top:0;background:var(--ink);color:var(--paper);padding:12px 18px;z-index:80}
 .skip:focus{left:0}
-:focus-visible{outline:2.5px solid var(--amber);outline-offset:3px}
+:focus-visible{outline:2.5px solid var(--accent);outline-offset:3px}
 .wrap{width:min(1240px,100%);margin-inline:auto;padding-inline:20px}
 
 /* Kleinschrift-Label — laeuft durch die ganze Seite */
 .lbl{font-size:11px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--muted)}
 
 /* --- Statusleiste -------------------------------------------------------- */
-.strip{background:var(--dark);color:#cfc6b6;font-size:12px}
+.strip{background:var(--dark);color:#b9c9dc;font-size:12px}
 .strip__in{display:flex;align-items:center;gap:18px;padding-block:9px;flex-wrap:wrap}
 .strip__demo{display:flex;align-items:center;gap:8px;font-weight:650;letter-spacing:.04em;
-  text-transform:uppercase;font-size:10.5px;color:var(--amber-lt)}
-.strip__demo::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--amber-lt);
-  box-shadow:0 0 0 3px rgba(224,149,39,.22)}
+  text-transform:uppercase;font-size:10.5px;color:var(--accent-lt)}
+.strip__demo::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent-lt);
+  box-shadow:0 0 0 3px rgba(61,134,221,.24)}
 .strip__pay{margin-left:auto;display:flex;align-items:center;gap:13px;opacity:.72}
 .strip__pay svg{display:block}
 .strip__pay span:first-child{font-size:10px;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap}
@@ -122,7 +122,7 @@ img{max-width:100%}
   border-radius:var(--r);white-space:nowrap;transition:color .16s,background .16s}
 .site nav a:hover{color:var(--ink);background:var(--paper-2)}
 .site nav a.is-cta{background:var(--ink);color:var(--paper);font-weight:650;padding-inline:17px}
-.site nav a.is-cta:hover{background:var(--amber)}
+.site nav a.is-cta:hover{background:var(--accent)}
 .nav-hide{display:none}
 
 /* --- Held ---------------------------------------------------------------- */
@@ -130,8 +130,8 @@ img{max-width:100%}
 .hero__grid{display:grid;gap:0}
 .hero__txt{padding-block:44px 36px}
 .hero__kick{display:inline-flex;align-items:center;gap:9px;margin-bottom:22px}
-.hero__kick b{font-size:11px;font-weight:750;letter-spacing:.13em;text-transform:uppercase;color:var(--amber)}
-.hero__kick i{width:26px;height:1.5px;background:var(--amber);display:block}
+.hero__kick b{font-size:11px;font-weight:750;letter-spacing:.13em;text-transform:uppercase;color:var(--accent)}
+.hero__kick i{width:26px;height:1.5px;background:var(--accent);display:block}
 .hero h1{font-size:clamp(40px,8.4vw,78px);line-height:.94;letter-spacing:-.048em;max-width:14ch}
 .hero h1 em{font-style:normal;display:block;color:var(--muted)}
 .hero__sub{margin-top:24px;font-size:clamp(17px,2vw,20px);color:var(--ink-2);max-width:42ch;line-height:1.5}
@@ -151,10 +151,10 @@ img{max-width:100%}
   background:var(--ink);color:var(--paper);padding:15px 26px;border-radius:var(--r);
   font-size:16px;font-weight:700;letter-spacing:-.01em;display:inline-flex;align-items:center;gap:11px;
   transition:background .18s,border-color .18s,color .18s,transform .12s}
-.btn:hover{background:var(--amber);border-color:var(--amber);color:#fff}
+.btn:hover{background:var(--accent);border-color:var(--accent);color:#fff}
 .btn:active{transform:translateY(1px)}
 .btn--ghost{background:transparent;color:var(--ink);border-color:var(--line)}
-.btn--ghost:hover{background:transparent;color:var(--amber);border-color:var(--amber)}
+.btn--ghost:hover{background:transparent;color:var(--accent);border-color:var(--accent)}
 .btn--wide{width:100%;justify-content:center}
 .btn--sm{padding:11px 18px;font-size:14.5px}
 .btn:disabled{opacity:.5;cursor:not-allowed}
@@ -169,7 +169,7 @@ img{max-width:100%}
 .fact:nth-child(2n){border-right:0}
 .fact b{display:block;font-size:clamp(26px,3.6vw,36px);font-weight:800;letter-spacing:-.04em;line-height:1}
 .fact span{display:block;font-size:13px;color:var(--muted);margin-top:7px;line-height:1.35}
-.fact--hl b{color:var(--amber)}
+.fact--hl b{color:var(--accent)}
 
 /* --- Abschnitte ---------------------------------------------------------- */
 section{scroll-margin-top:78px}
@@ -192,7 +192,7 @@ section{scroll-margin-top:78px}
 .bsearch{margin-left:auto;position:relative;flex:1;min-width:190px;max-width:280px}
 .bsearch input{width:100%;padding:10px 14px 10px 36px;border:1.5px solid var(--line);
   border-radius:var(--r);background:var(--card);font-size:14.5px}
-.bsearch input:focus{outline:none;border-color:var(--amber)}
+.bsearch input:focus{outline:none;border-color:var(--accent)}
 .bsearch svg{position:absolute;left:13px;top:50%;transform:translateY(-50%);opacity:.45}
 
 .brands{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line);
@@ -252,7 +252,7 @@ label.f{display:block;font-size:13px;font-weight:700;margin-bottom:7px;letter-sp
 label.f small{display:block;font-weight:400;color:var(--muted);font-size:12.5px;margin-top:2px}
 .inp{width:100%;padding:14px 15px;border:1.5px solid var(--line);border-radius:var(--r);
   background:var(--paper);font-size:16px;transition:border-color .18s,background .18s}
-.inp:focus{outline:none;border-color:var(--amber);background:var(--card)}
+.inp:focus{outline:none;border-color:var(--accent);background:var(--card)}
 .inp--big{font-family:var(--mono);font-size:26px;font-weight:700;text-align:center;
   letter-spacing:.4em;text-indent:.4em;padding-block:16px}
 .row{display:flex;gap:10px}
@@ -262,10 +262,10 @@ label.f small{display:block;font-weight:400;color:var(--muted);font-size:12.5px;
 .msg::before{content:"";flex:none;width:3px;align-self:stretch;background:currentColor;opacity:.45}
 .msg.ok{color:var(--green)}
 .msg.err{color:var(--red)}
-.msg.busy{color:var(--amber)}
+.msg.busy{color:var(--accent)}
 .chk{display:flex;gap:11px;align-items:flex-start;font-size:13.5px;color:var(--ink-2);
   line-height:1.45;cursor:pointer;margin-bottom:18px}
-.chk input{margin:1px 0 0;width:19px;height:19px;flex:none;accent-color:var(--amber)}
+.chk input{margin:1px 0 0;width:19px;height:19px;flex:none;accent-color:var(--accent)}
 
 /* --- Zahlung ------------------------------------------------------------- */
 .sum{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;
@@ -291,14 +291,14 @@ label.f small{display:block;font-weight:400;color:var(--muted);font-size:12.5px;
   font-family:var(--mono)}
 .proc{margin-top:18px;border-top:1px solid var(--line);padding-top:16px}
 .proc__bar{height:3px;background:var(--line);overflow:hidden}
-.proc__fill{display:block;height:100%;width:calc(var(--p,0) * 1%);background:var(--amber);
+.proc__fill{display:block;height:100%;width:calc(var(--p,0) * 1%);background:var(--accent);
   transition:width .42s cubic-bezier(.4,0,.2,1)}
 .proc.is-done .proc__fill{background:var(--green)}
 .proc.is-fail .proc__fill{background:var(--red)}
 .proc__status{display:flex;align-items:center;gap:10px;margin-top:11px;font-size:11px;
   font-weight:700;letter-spacing:.12em;color:var(--muted);text-transform:uppercase}
 .proc__status i{width:7px;height:7px;border-radius:50%;background:var(--line);flex:none}
-.proc.is-run .proc__status i{background:var(--amber);animation:pulse 1s ease-in-out infinite}
+.proc.is-run .proc__status i{background:var(--accent);animation:pulse 1s ease-in-out infinite}
 .proc.is-done .proc__status i{background:var(--green)}
 .proc.is-fail .proc__status i{background:var(--red)}
 @keyframes pulse{50%{opacity:.25}}
@@ -355,9 +355,40 @@ label.f small{display:block;font-weight:400;color:var(--muted);font-size:12.5px;
 .stepl__i:first-child{border-top:0;padding-top:0}
 .stepl__n{font-size:38px;font-weight:800;letter-spacing:-.05em;line-height:.9;color:var(--line);
   transition:color .2s}
-.stepl__i:hover .stepl__n{color:var(--amber)}
+.stepl__i:hover .stepl__n{color:var(--accent)}
 .stepl h3{font-size:19px;letter-spacing:-.03em;margin-bottom:6px}
 .stepl p{font-size:15.5px;color:var(--ink-2);line-height:1.55}
+
+/* --- Artikel / Wissen ---------------------------------------------------- */
+.art{display:grid;gap:26px;align-items:start}
+.art__pic{margin:0;border:1px solid var(--line);overflow:hidden;position:relative}
+.art__pic img{width:100%;display:block;aspect-ratio:3/2;object-fit:cover}
+.art__pic figcaption{position:absolute;left:0;right:0;bottom:0;padding:30px 16px 13px;font-size:12px;
+  color:#fff;line-height:1.4;background:linear-gradient(0deg,rgba(6,14,24,.9),transparent)}
+.art__txt > * + *{margin-top:17px}
+.art__txt p{font-size:16.5px;line-height:1.66;color:var(--ink-2);max-width:66ch}
+.art__txt p strong{color:var(--ink);font-weight:700}
+.art h3{font-size:21px;letter-spacing:-.03em;margin-top:26px}
+
+/* Begriffe: Precode / Seriennummer / VIN */
+.terms{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);margin-top:8px}
+.term{background:var(--card);padding:20px}
+.term b{display:block;font-size:17px;font-weight:800;letter-spacing:-.03em}
+.term code{display:inline-block;margin-top:8px;font-family:var(--mono);font-size:13px;
+  background:var(--paper-2);padding:4px 9px;letter-spacing:.06em}
+.term p{font-size:14.5px;color:var(--ink-2);line-height:1.55;margin-top:10px}
+
+/* Kostenvergleich */
+.cmp{width:100%;border-collapse:collapse;font-size:15px;margin-top:6px}
+.cmp th{text-align:left;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted);font-weight:700;padding:0 14px 11px;border-bottom:2px solid var(--ink)}
+.cmp td{padding:15px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+.cmp td:first-child{font-weight:700}
+.cmp td small{display:block;font-size:13px;font-weight:400;color:var(--muted);margin-top:3px;line-height:1.4}
+.cmp tr.is-us td{background:var(--accent-wash)}
+.cmp tr.is-us td:first-child{box-shadow:inset 4px 0 0 var(--accent)}
+.cmp__p{white-space:nowrap;font-weight:700}
+.src{font-size:12.5px;color:var(--muted);margin-top:14px;line-height:1.5}
 
 /* --- Garantie ------------------------------------------------------------ */
 .guar{display:flex;gap:18px;align-items:flex-start;padding:24px;background:var(--green-wash);
@@ -387,7 +418,7 @@ details p{padding-bottom:20px;font-size:15.5px;color:var(--ink-2);line-height:1.
 .metas div span{display:block;font-size:12px;color:var(--muted);margin-top:4px}
 
 /* --- Ton ----------------------------------------------------------------- */
-.tuner{border:1px solid #2c2820;background:#100e0b;color:#e6e0d4;padding:20px}
+.tuner{border:1px solid #1e3149;background:#0a1421;color:#dbe6f2;padding:20px}
 .tuner__h{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap}
 .tuner__h b{font-size:15px;font-weight:750;letter-spacing:-.02em}
 .tuner__h em{font-style:normal;font-size:10px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;
@@ -410,32 +441,32 @@ details p{padding-bottom:20px;font-size:15.5px;color:var(--ink-2);line-height:1.
   font-weight:650;line-height:1.25;transition:background .16s,color .16s}
 .preset:hover{background:#221d16;color:#fff}
 .preset b{display:block;font-family:var(--mono);font-size:10px;color:#7d7466;font-weight:600;margin-bottom:3px}
-.preset[aria-pressed="true"]{background:var(--amber);color:#17140f}
+.preset[aria-pressed="true"]{background:var(--accent);color:#17140f}
 .preset[aria-pressed="true"] b{color:#4a3413}
 .tuner__c{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
 .pwr{display:inline-flex;align-items:center;gap:10px;cursor:pointer;background:transparent;
   border:1.5px solid #3a342a;color:#ddd6c8;padding:11px 18px;font-weight:650;font-size:14px;
   border-radius:var(--r);transition:all .16s}
-.pwr:hover{border-color:var(--amber);color:#fff}
+.pwr:hover{border-color:var(--accent);color:#fff}
 .pwr.is-on{background:var(--display);border-color:var(--display);color:#07120c}
 .pwr i{width:8px;height:8px;border-radius:50%;background:#4a4438;flex:none;transition:all .2s}
 .pwr.is-on i{background:#07120c}
 .vol{flex:1;min-width:150px;display:flex;align-items:center;gap:11px}
 .vol label{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#8a8171;font-weight:700}
-.vol input{flex:1;min-width:0;accent-color:var(--amber)}
+.vol input{flex:1;min-width:0;accent-color:var(--accent)}
 .tuner__n{margin-top:14px;font-size:12px;color:#8a8171;line-height:1.5}
 
 /* --- Fuss ---------------------------------------------------------------- */
-.foot{background:var(--dark);color:#b4ab9b;padding-block:48px 34px}
+.foot{background:var(--dark);color:#a8bacd;padding-block:48px 34px}
 .foot__cols{display:grid;gap:28px;margin-bottom:34px}
 .foot h4{font-size:10.5px;font-weight:750;letter-spacing:.13em;text-transform:uppercase;
-  color:#78705f;margin:0 0 13px}
+  color:#6b8199;margin:0 0 13px}
 .foot ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:7px 14px}
-.foot a{font-size:13.5px;text-decoration:none;color:#c8bfae;transition:color .15s}
-.foot a:hover{color:var(--amber-lt)}
-.foot__note{font-size:12.5px;line-height:1.65;color:#857c6c;max-width:82ch;
-  padding-top:26px;border-top:1px solid #2a251d}
-.foot__note b{color:#ddd4c2}
+.foot a{font-size:13.5px;text-decoration:none;color:#bccadb;transition:color .15s}
+.foot a:hover{color:var(--accent-lt)}
+.foot__note{font-size:12.5px;line-height:1.65;color:#7c8fa5;max-width:82ch;
+  padding-top:26px;border-top:1px solid #1c2c3f}
+.foot__note b{color:#d3dfec}
 
 @media (prefers-reduced-motion: reduce){
   html{scroll-behavior:auto}
@@ -455,6 +486,9 @@ details p{padding-bottom:20px;font-size:15.5px;color:var(--ink-2);line-height:1.
   .foot__cols{grid-template-columns:repeat(2,1fr)}
 }
 @media (min-width:900px){
+  .art{grid-template-columns:.9fr 1.1fr;gap:38px}
+  .art--flip .art__pic{order:2}
+  .terms{grid-template-columns:repeat(3,1fr)}
   .brands{grid-template-columns:repeat(4,1fr)}
   .pays{grid-template-columns:repeat(5,1fr)}
   .flow{grid-template-columns:.85fr 1.15fr;align-items:start;gap:40px}
@@ -486,6 +520,7 @@ details p{padding-bottom:20px;font-size:15.5px;color:var(--ink-2);line-height:1.
       <a class="nav-hide" href="#marken">Marken</a>
       <a class="nav-hide" href="#anleitung">Anleitung</a>
       <a class="nav-hide" href="#ablauf">Ablauf</a>
+      <a class="nav-hide" href="#kosten">Preise</a>
       <a class="nav-hide" href="#fragen">Fragen</a>
       <a class="is-cta" href="#finder">Code anfordern</a>
     </nav>
@@ -707,7 +742,133 @@ details p{padding-bottom:20px;font-size:15.5px;color:var(--ink-2);line-height:1.
   </div>
 </section>
 
-<section class="band">
+<section class="band" id="wissen">
+  <div class="wrap">
+    <div class="shead">
+      <span class="shead__top lbl">Hintergrund <i></i></span>
+      <h2>Warum verlangt das Radio &uuml;berhaupt einen Code?</h2>
+    </div>
+
+    <div class="art">
+      <figure class="art__pic">
+        <img src="img/cockpit.jpg" alt="Autoradio im Armaturenbrett bei Abendlicht"
+             width="1200" height="800" loading="lazy">
+        <figcaption>Ohne Code bleibt das Ger&auml;t stumm &mdash; auch wenn technisch nichts kaputt ist.</figcaption>
+      </figure>
+      <div class="art__txt">
+        <p>Der Code ist ein <strong>Diebstahlschutz aus den Neunzigern</strong>. Autoradios waren
+          damals begehrte Beute: schnell ausgebaut, leicht weiterverkauft. Die Hersteller haben
+          deshalb jedes Ger&auml;t an eine Zahlenkombination gebunden. Wird die Stromversorgung
+          unterbrochen, verlangt das Radio diese Kombination &mdash; ein gestohlenes Ger&auml;t ist ohne
+          sie wertlos.</p>
+        <p>Das Problem ist nicht der Diebstahl, sondern der Alltag. <strong>Jede Trennung vom Strom
+          l&ouml;st die Sperre aus</strong>: Batteriewechsel, entladene Batterie nach zwei Wochen
+          Standzeit, Arbeiten an der Elektrik, ein ausgebautes Radio beim Werkstatttermin. Das
+          Ger&auml;t ist in Ordnung, es wei&szlig; nur nicht mehr, dass es im richtigen Auto sitzt.</p>
+        <p>Der Code stand auf einer <strong>Codekarte</strong>, die dem Neuwagen beilag &mdash; oft im
+          Serviceheft, manchmal als Aufkleber im Handschuhfach. Nach zehn Jahren und zwei
+          Vorbesitzern hat die niemand mehr. Genau dann f&auml;ngt die Suche an.</p>
+
+        <h3>Neuere Fahrzeuge: kein Code, daf&uuml;r Komponentenschutz</h3>
+        <p>Ab etwa 2015 haben viele Hersteller das Verfahren gewechselt. Statt einer PIN pr&uuml;ft das
+          Ger&auml;t kryptografisch, ob es zur Fahrgestellnummer passt &mdash; beim VW-Konzern hei&szlig;t das
+          <strong>Komponentenschutz</strong>. Ein Code hilft dort nicht mehr; das Entsperren l&auml;uft
+          online am Fahrzeug &uuml;ber die Herstellerdiagnose. Die Code-Frage betrifft also vor allem
+          Fahrzeuge bis etwa Baujahr 2015.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band band--paper2" id="begriffe">
+  <div class="wrap">
+    <div class="shead">
+      <span class="shead__top lbl">Nicht verwechseln <i></i></span>
+      <h2>Precode, Seriennummer, Fahrgestellnummer.</h2>
+      <p>Drei Nummern, die st&auml;ndig durcheinandergehen. Nur eine davon brauchen wir.</p>
+    </div>
+    <div class="terms">
+      <div class="term">
+        <b>Precode</b>
+        <code>A123</code>
+        <p>Vier Zeichen: ein Buchstabe, drei Ziffern. Das <strong>Radio selbst zeigt ihn an</strong>
+          &mdash; bei Renault und Dacia, wenn Sie die Tasten 1 und 6 gleichzeitig halten. Daraus
+          rechnen wir den Freischaltcode. Das ist die Nummer, die wir brauchen.</p>
+      </div>
+      <div class="term">
+        <b>Seriennummer</b>
+        <code>VWZ1Z2W123456</code>
+        <p>Steht auf dem Geh&auml;use des Ger&auml;ts, meist erst nach dem Ausbau sichtbar. Je nach
+          Hersteller 14 Stellen mit Buchstaben-Pr&auml;fix. Andere Anbieter arbeiten damit; wir
+          brauchen sie nur, wenn kein Precode angezeigt wird.</p>
+      </div>
+      <div class="term">
+        <b>Fahrgestellnummer</b>
+        <code>VF17RRN0A60392301</code>
+        <p>17 Stellen, steht im Fahrzeugschein unter Feld E und meist unter der Windschutzscheibe.
+          Sie geh&ouml;rt zum Auto, nicht zum Radio &mdash; sie verr&auml;t uns die Marke, aber nicht den
+          Code.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band" id="kosten">
+  <div class="wrap">
+    <div class="shead">
+      <span class="shead__top lbl">Vergleich <i></i></span>
+      <h2>Was die anderen Wege kosten.</h2>
+      <p>Es gibt vier M&ouml;glichkeiten, an den Code zu kommen. Der g&uuml;nstigste ist nicht immer der
+        schnellste &mdash; und manchmal ist er sogar kostenlos.</p>
+    </div>
+
+    <div class="art art--flip">
+      <figure class="art__pic">
+        <img src="img/diagnose.jpg" alt="Diagnoseger&auml;t wird im Fahrzeug angeschlossen"
+             width="1200" height="800" loading="lazy">
+        <figcaption>In der Werkstatt h&auml;ngt daf&uuml;r ein Diagnoseger&auml;t am Fahrzeug.</figcaption>
+      </figure>
+      <div class="art__txt">
+        <div class="scroll-x">
+          <table class="cmp">
+            <thead><tr><th>Weg</th><th>Kosten</th><th>Aufwand</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>Vertragsh&auml;ndler<small>der eigenen Marke</small></td>
+                <td class="cmp__p">0 &ndash; 30 &euro;</td>
+                <td>Termin, Fahrzeugschein, Fahrt hin und zur&uuml;ck. Bei vielen Marken gibt es den
+                  Code kostenlos &mdash; fragen lohnt sich immer zuerst.</td>
+              </tr>
+              <tr>
+                <td>Freie Werkstatt<small>oder Autoelektrik</small></td>
+                <td class="cmp__p">65 &ndash; 75 &euro;</td>
+                <td>Termin n&ouml;tig, Ger&auml;t wird oft ausgebaut. Sinnvoll, wenn ohnehin etwas
+                  anderes zu machen ist.</td>
+              </tr>
+              <tr>
+                <td>Online-Anbieter<small>gestaffelt nach Marke</small></td>
+                <td class="cmp__p">9,90 &ndash; 34,90 &euro;</td>
+                <td>Meist in Minuten per E-Mail. Der Preis richtet sich nach der Marke, obwohl der
+                  Aufwand &uuml;berall gleich ist.</td>
+              </tr>
+              <tr class="is-us">
+                <td>Hier<small>Renault und Dacia</small></td>
+                <td class="cmp__p">4,98 &euro;</td>
+                <td>Pr&uuml;fung vorab kostenlos, Code sofort am Bildschirm. Ein Preis f&uuml;r jede
+                  Marke, kein Konto n&ouml;tig.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="src">Vergleichswerte: Werkstattpreise nach Angabe von radiocodes.co, Online-Preise
+          nach der Preisliste von code-autoradio.com (beide abgerufen am 13.09.2026).
+          H&auml;ndlerpreise schwanken je nach Marke und Betrieb.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band band--paper2">
   <div class="wrap two">
     <div id="fragen">
       <div class="shead">
@@ -745,6 +906,31 @@ details p{padding-bottom:20px;font-size:15.5px;color:var(--ink-2);line-height:1.
           <summary>Welche Zahlungsarten?</summary>
           <p>Karte, PayPal, Apple Pay, Google Pay, Klarna, Sofortüberweisung, Vorkasse und
             Lastschrift. In dieser Testumgebung ist jede Auswahl simuliert.</p>
+        </details>
+        <details>
+          <summary>Mein Radio zeigt gar keinen Precode an. Was jetzt?</summary>
+          <p>Dann hilft nur die Seriennummer vom Geh&auml;use &mdash; und daf&uuml;r muss das Ger&auml;t
+            raus. Bei Renault und Dacia lohnt vorher ein zweiter Versuch: manche Modelle zeigen den
+            Precode erst, wenn man die Tastenkombination l&auml;nger als f&uuml;nf Sekunden h&auml;lt,
+            andere erst nach mehrmaligem Aus- und Einschalten.</p>
+        </details>
+        <details>
+          <summary>Ich habe das Auto gebraucht gekauft. Reicht das?</summary>
+          <p>Ja. Der Code geh&ouml;rt zum Ger&auml;t, nicht zum Vorbesitzer. Sie brauchen keine
+            Zustimmung von irgendjemandem &mdash; nur die Nummer, die Ihr Radio anzeigt.</p>
+        </details>
+        <details>
+          <summary>Wie lange dauert es wirklich?</summary>
+          <p>Das Rechnen selbst dauert Millisekunden. Die Zeit geht f&uuml;r das Ablesen des Precodes
+            drauf &mdash; je nach Modell ein bis f&uuml;nf Minuten. Danach steht der Code sofort am
+            Bildschirm, ohne Wartezeit und ohne R&uuml;ckruf.</p>
+        </details>
+        <details>
+          <summary>Funktioniert das auch bei Navigationsger&auml;ten?</summary>
+          <p>Bei Renault und Dacia ja, solange das Ger&auml;t einen vierstelligen Precode anzeigt.
+            Gr&ouml;&szlig;ere Navigationssysteme neuerer Baujahre arbeiten dagegen mit
+            Komponentenschutz &mdash; dort hilft kein Code, sondern nur die Herstellerdiagnose am
+            Fahrzeug.</p>
         </details>
         <details>
           <summary>Impressum, AGB, Widerruf, Datenschutz</summary>
@@ -812,7 +998,9 @@ details p{padding-bottom:20px;font-size:15.5px;color:var(--ink-2);line-height:1.
       <div><h4>Anleitungen</h4><ul id="footGuides"></ul></div>
       <div><h4>Seite</h4><ul>
         <li><a href="#marken">Alle Marken</a></li><li><a href="#ablauf">Ablauf</a></li>
-        <li><a href="#fragen">Fragen</a></li><li><a href="#finder">Code anfordern</a></li>
+        <li><a href="#wissen">Warum ein Code?</a></li><li><a href="#begriffe">Precode erkl&auml;rt</a></li>
+        <li><a href="#kosten">Preisvergleich</a></li><li><a href="#fragen">Fragen</a></li>
+        <li><a href="#finder">Code anfordern</a></li>
       </ul></div>
     </div>
     <p class="foot__note">
