@@ -81,7 +81,12 @@ a{color:var(--brand);text-underline-offset:3px}
 .logo b{color:var(--brand)}
 .site nav{margin-left:auto;display:flex;gap:2px;align-items:center}
 .site nav a{color:var(--ink-soft);text-decoration:none;font-size:14.5px;font-weight:560;
-  padding:8px 10px;border-radius:9px}
+  padding:8px 10px;border-radius:9px;white-space:nowrap}
+@media (max-width:599px){
+  .site nav a{font-size:13.5px;padding:7px 7px}
+  .logo{font-size:16.5px;gap:7px}
+  .badge--demo{font-size:9.5px;padding:3px 7px;letter-spacing:.03em}
+}
 .site nav a:hover{background:var(--brand-wash);color:var(--brand-ink)}
 .nav-hide{display:none}
 .badge{font-size:11px;font-weight:760;letter-spacing:.05em;text-transform:uppercase;padding:4px 9px;
@@ -500,7 +505,7 @@ details p + p{padding-top:0}
     <p class="hero__sub">Batterie gewechselt, Radio verlangt einen Code? Precode eingeben, Code bekommen — mit Anleitung für Ihre Marke. Die Prüfung kostet nichts.</p>
 
     <ul class="usp">
-      <li><i><svg width="15" height="15" viewBox="0 0 16 16"><path d="M8 1.6l1.9 4 4.4.6-3.2 3.1.8 4.3L8 11.6 4.1 13.6l.8-4.3L1.7 6.2l4.4-.6z" fill="#ffc45c"/></svg></i><b style="font-weight:760">4,98 € pro Code</b> — jede Marke, ohne Staffelung</li>
+      <li><i><svg width="15" height="15" viewBox="0 0 16 16"><path d="M8 1.6l1.9 4 4.4.6-3.2 3.1.8 4.3L8 11.6 4.1 13.6l.8-4.3L1.7 6.2l4.4-.6z" fill="#ffc45c"/></svg></i><span><b style="font-weight:780">4,98 € pro Code</b> — jede Marke, ohne Staffelung</span></li>
       <li><i><svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="#8fd9b8" stroke-width="1.7"><path d="M2 8.5l4 4 8-9" stroke-linecap="round" stroke-linejoin="round"/></svg></i>25.900 Precodes gegengeprüft, 0 Abweichungen</li>
       <li><i><svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="#8fd9b8" stroke-width="1.7"><path d="M2 8.5l4 4 8-9" stroke-linecap="round" stroke-linejoin="round"/></svg></i>Code sofort am Bildschirm, kein Konto nötig</li>
       <li><i><svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="#9fc4ff" stroke-width="1.7"><rect x="2.2" y="2.2" width="11.6" height="11.6" rx="2"/><path d="M5.4 6.2h5.2M5.4 9h3.4" stroke-linecap="round"/></svg></i>Schritt-für-Schritt-Anleitung für jede Marke</li>
